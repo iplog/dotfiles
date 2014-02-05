@@ -1,0 +1,22 @@
+###
+# MacOSX
+###
+.DS_Store
+.localized
+
+###
+# Git merge files
+###
+*.orig
+
+###
+# system SWAP, TMP and BACKUP files
+###
+*~
+*.swp
+*.bak
+
+###
+# Compiled files
+###
+git/gitconfig
