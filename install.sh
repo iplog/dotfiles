@@ -17,18 +17,44 @@ while true; do
     esac
 done
 
-# Get current working directory
-CWD=$(pwd)
-
 # Create git conf file
 sed -e s/{{firstName}}/${firstName}/ \
 -e s/{{lastName}}/${lastName}/ \
 -e s/{{email}}/${email}/ git/gitconfig.sample > git/gitconfig
 
-# check for existing files and back them up
-if [ -f ~/.gitconfig ]; then
-  mv ~/.gitconfig ~/.gitconfig.orig
+# install oh-my-zsh
+if [ ! -r ~/.oh-my-zsh ]; then
+  curl -L https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sh
 fi
 
-# create symlink
-ln -s ${CWD}/git/gitconfig ~/.gitconfig
+# create arrays
+declare -a confFiles=(
+  git/gitconfig
+  zsh/zshrc
+)
+
+declare -a dests=(
+  ~/.gitconfig
+  ~/.zshrc
+)
+
+# Get current working directory
+CWD=$(pwd)
+
+# create all the files
+for i in ${!confFiles[@]}; do
+  confFile=${confFiles[$i]}
+  dest=${dests[$i]}
+
+  # check for existing files and back them up
+  if [ -f ${dest} ]; then
+    mv ${dest} ${dest}.orig
+  elif [ -h ${dest} ]; then
+    rm ${dest}
+  fi
+
+  # create symlink
+  ln -s ${CWD}/${confFile} ${dest}
+
+  echo "${dest} installed!"
+done
