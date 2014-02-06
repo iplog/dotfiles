@@ -32,12 +32,14 @@ declare -a confFiles=(
   git/gitconfig
   zsh/zshrc
   oh-my-zsh/perso.zsh-theme
+  ssh/config
 )
 
 declare -a dests=(
   ~/.gitconfig
   ~/.zshrc
   ~/.oh-my-zsh/custom/perso.zsh-theme
+  ~/.ssh/config
 )
 
 # Get current working directory
