@@ -31,11 +31,13 @@ fi
 declare -a confFiles=(
   git/gitconfig
   zsh/zshrc
+  oh-my-zsh/perso.zsh-theme
 )
 
 declare -a dests=(
   ~/.gitconfig
   ~/.zshrc
+  ~/.oh-my-zsh/custom/perso.zsh-theme
 )
 
 # Get current working directory
@@ -47,7 +49,7 @@ for i in ${!confFiles[@]}; do
   dest=${dests[$i]}
 
   # check for existing files and back them up
-  if [ -f ${dest} ]; then
+  if [ -f ${dest} ] && [ ! -f ${dest}.orig ]; then
     mv ${dest} ${dest}.orig
   elif [ -h ${dest} ]; then
     rm ${dest}
