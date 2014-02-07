@@ -69,3 +69,5 @@ done
 
 # install vim
 sh vim/install.sh
+
+echo "Installation: Done!"
