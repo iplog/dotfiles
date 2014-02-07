@@ -33,6 +33,8 @@ declare -a confFiles=(
   zsh/zshrc
   oh-my-zsh/perso.zsh-theme
   ssh/config
+  vim/vimrc
+  vim/gvimrc
 )
 
 declare -a dests=(
@@ -40,6 +42,8 @@ declare -a dests=(
   ~/.zshrc
   ~/.oh-my-zsh/custom/perso.zsh-theme
   ~/.ssh/config
+  ~/.vimrc
+  ~/.gvimrc
 )
 
 # Get current working directory
@@ -62,3 +66,6 @@ for i in ${!confFiles[@]}; do
 
   echo "${dest} installed!"
 done
+
+# install vim
+sh vim/install.sh
