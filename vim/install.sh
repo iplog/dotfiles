@@ -7,6 +7,9 @@ fi
 # install vundle
 git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
 
+# Add some folders for swap, bakcup and undo files
+mkdir -p ~/.vim/tmp/{backup,swap,undo}
+
 # install all vundle bundles
 vim +BundleInstall +qall
 
@@ -53,4 +56,6 @@ ln -s ${CWD}/vim/powerline/themes/default.json ~/.config/powerline/themes/vim/de
 echo "Powerline: installed. config files in ~/.config/powerline\n"
 
 # syntasctic: just a Warning
-echo "Syntasctic: Do not forget to install syntax checkers"
+echo "Syntasctic: Do not forget to install syntax checkers\n"
+
+echo " Vim instaillation: Done!"
