@@ -38,6 +38,9 @@ Bundle 'smerrill/vcl-vim-plugin'
 Bundle 'gorodinskiy/vim-coloresque'
 Bundle 'kchmck/vim-coffee-script'
 Bundle 'iplog/vim-lollipops'
+Bundle 'sdanielf/vim-stdtabs'
+Bundle 'mattn/emmet-vim'
+
 
 " Bundle 'embear/vim-localvimrc'
 " Bundle 'jelera/vim-gummybears-colorscheme'

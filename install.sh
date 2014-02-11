@@ -1,3 +1,5 @@
+#!/bin/sh
+
 echo "Your dotfiles installation"
 echo "Please enter some details: "
 
