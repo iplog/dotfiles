@@ -37,6 +37,7 @@ declare -a confFiles=(
   ssh/config
   vim/vimrc
   vim/gvimrc
+  ack/ackrc
 )
 
 declare -a dests=(
@@ -46,6 +47,7 @@ declare -a dests=(
   ~/.ssh/config
   ~/.vimrc
   ~/.gvimrc
+  ~/.ackrc
 )
 
 # Get current working directory
