@@ -399,3 +399,5 @@ gT            go to previous tab
 I was just fighting with this problem myself. According to a thread I found on nabble, the beep is caused by showmatch being on and vim trying to find and jump to the opening < for the > you're typing.
 
 This can either be fixed by setting noshowmatch, or adjusting matchpairs so that it doesn't match < and >
+
+:%!python -m json.tool

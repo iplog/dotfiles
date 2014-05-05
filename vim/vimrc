@@ -12,7 +12,8 @@ call vundle#rc()
 " required!
 Bundle 'gmarik/vundle'
 Bundle 'mileszs/ack.vim.git'
-Bundle 'scrooloose/nerdtree'
+" Bundle 'scrooloose/nerdtree'
+Bundle 'tpope/vim-vinegar'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'scrooloose/syntastic'
 Bundle 'groenewege/vim-less'
@@ -35,7 +36,7 @@ Bundle 'majutsushi/tagbar'
 Bundle 'marijnh/tern_for_vim'
 Bundle 'skwp/greplace.vim'
 Bundle 'smerrill/vcl-vim-plugin'
-Bundle 'gorodinskiy/vim-coloresque'
+Bundle 'ap/vim-css-color'
 Bundle 'kchmck/vim-coffee-script'
 Bundle 'iplog/vim-lollipops'
 Bundle 'sdanielf/vim-stdtabs'
@@ -46,6 +47,11 @@ Bundle 'mattn/emmet-vim'
 " Bundle 'jelera/vim-gummybears-colorscheme'
 " for the js syntax additions
 " Bundle 'tangphillip/SunburstVIM.git'
+
+" Clear filetype flags before changing runtimepath to force Vim to reload them.
+filetype off
+filetype plugin indent off
+set runtimepath+=$GOROOT/misc/vim
 
 " Enable filetypes. required!
 filetype on
@@ -216,12 +222,27 @@ let g:neocomplcache_enable_at_startup = 1
 let g:neocomplcache_enable_auto_select = 1
 set completeopt-=preview
 
+" Enable omni completion.
+" autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+" autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+" autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+" autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+" autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+" autocmd FileType go setlocal omnifunc=go#complete#Complete
+
+" Enable heavy omni completion.
+if !exists('g:neocomplcache_omni_patterns')
+  let g:neocomplcache_omni_patterns = {}
+endif
+let g:neocomplcache_omni_patterns.go = '\h\w*\.\?'
+
 " Scratch
-nmap <Leader>d :Sscratch<CR>
+nmap <Leader>d :Sscratch<CR>:q<CR>:b __Scratch__<CR>
+nmap <Leader>D :b __Scratch__<CR>:b#<CR>
 
 " Syntastic
 let g:syntastic_check_on_open = 1
-let g:syntastic_auto_jump = 1
+" let g:syntastic_auto_jump = 1
 let g:syntastic_always_populate_loc_list = 1
 
 " Source the vimrc file after saving it. This way, you don't have to reload Vim to see the changes.
