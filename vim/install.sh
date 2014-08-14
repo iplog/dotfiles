@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # run with bash -> the path may be differetn than the one you have in zshrc if you are using zsh
 echo "\nStart vim installation"
