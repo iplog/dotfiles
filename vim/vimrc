@@ -41,7 +41,9 @@ Bundle 'kchmck/vim-coffee-script'
 Bundle 'iplog/vim-lollipops'
 Bundle 'sdanielf/vim-stdtabs'
 Bundle 'mattn/emmet-vim'
-
+Bundle 'Blackrush/vim-gocode'
+Bundle 'wavded/vim-stylus'
+Bundle 'digitaltoad/vim-jade'
 
 " Bundle 'embear/vim-localvimrc'
 " Bundle 'jelera/vim-gummybears-colorscheme'
@@ -140,6 +142,9 @@ set mousehide           "Hide mouse when typing
 
 " Share OS clipboard
 set clipboard=unnamed
+if $TMUX == ''
+  set clipboard+=unnamed
+endif
 
 " characters list incrementation
 set nrformats+=alpha
@@ -165,6 +170,8 @@ autocmd BufWritePre *\(.md\)\@<! :%s/\s\+$//e
 autocmd BufEnter *.less set filetype=less
 " hogan
 autocmd BufEnter *.hjs set filetype=handlebars
+" GO
+autocmd FileType go autocmd BufWritePre <buffer> Fmt
 
 " My Key bindings
 " nmap <C-h> <C-w>h
@@ -172,8 +179,8 @@ autocmd BufEnter *.hjs set filetype=handlebars
 " nmap <C-k> <C-w>k
 " nmap <C-l> <C-w>l
 
-inoremap <S-Esc> <C-n>
-inoremap <C-Esc> <C-p>
+" inoremap <S-Esc> <C-n>
+" inoremap <C-Esc> <C-p>
 
 " Bubble single lines (kicks butt)
 " http://vimcasts.org/episodes/bubbling-text/
@@ -202,6 +209,10 @@ nmap <Leader>f :Ack<space>
 " Plugins configuration
 " always start indent guides
 let indent_guides_enable_on_vim_startup = 1
+if !has("gui_running")
+  let g:indent_guides_auto_colors = 0
+  autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=233
+endif
 
 " use a space in coments
 let NERDSpaceDelims = 1
