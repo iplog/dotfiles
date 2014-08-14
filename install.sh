@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 echo "Your dotfiles installation"
 echo "Please enter some details: "
