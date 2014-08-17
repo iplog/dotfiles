@@ -38,6 +38,7 @@ declare -a confFiles=(
   vim/vimrc
   vim/gvimrc
   ack/ackrc
+  tmux/tmux.conf
 )
 
 declare -a dests=(
@@ -48,6 +49,7 @@ declare -a dests=(
   ~/.vimrc
   ~/.gvimrc
   ~/.ackrc
+  ~/.tmux.conf
 )
 
 # Get current working directory

@@ -12,7 +12,7 @@ call vundle#rc()
 " required!
 Bundle 'gmarik/vundle'
 Bundle 'mileszs/ack.vim.git'
-Bundle 'scrooloose/nerdtree'
+Bundle 'tpope/vim-vinegar'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'scrooloose/syntastic'
 Bundle 'groenewege/vim-less'
@@ -35,17 +35,20 @@ Bundle 'majutsushi/tagbar'
 Bundle 'marijnh/tern_for_vim'
 Bundle 'skwp/greplace.vim'
 Bundle 'smerrill/vcl-vim-plugin'
-Bundle 'gorodinskiy/vim-coloresque'
+Bundle 'ap/vim-css-color'
 Bundle 'kchmck/vim-coffee-script'
 Bundle 'iplog/vim-lollipops'
 Bundle 'sdanielf/vim-stdtabs'
 Bundle 'mattn/emmet-vim'
+Bundle 'Blackrush/vim-gocode'
+Bundle 'wavded/vim-stylus'
+Bundle 'digitaltoad/vim-jade'
+Bundle 'sjl/vitality.vim'
 
-
-" Bundle 'embear/vim-localvimrc'
-" Bundle 'jelera/vim-gummybears-colorscheme'
-" for the js syntax additions
-" Bundle 'tangphillip/SunburstVIM.git'
+" Clear filetype flags before changing runtimepath to force Vim to reload them.
+filetype off
+filetype plugin indent off
+set runtimepath+=$GOROOT/misc/vim
 
 " Enable filetypes. required!
 filetype on
@@ -54,9 +57,7 @@ filetype indent on
 syntax on
 
 " color settings (if terminal/gui supports it)
-if $TERM =~ '256color'
-  set t_Co=256
-elseif $TERM =~ '^xterm$'
+if $TERM =~ '256color' || $TERM =~ '^xterm$'
   set t_Co=256
 endif
 
@@ -134,6 +135,9 @@ set mousehide           "Hide mouse when typing
 
 " Share OS clipboard
 set clipboard=unnamed
+if $TMUX == ''
+  set clipboard+=unnamed
+endif
 
 " characters list incrementation
 set nrformats+=alpha
@@ -147,6 +151,10 @@ set undofile " enable undo
 
 " auto file reloading
 set autoread
+if !has('gui_running')
+  " working thanks to vitality plugin and `set -g focus-events on` in tmux conf
+  autocmd FocusGained,BufEnter * :silent! checktime
+endif
 
 " Color Scheme
 set cursorline          " Higlight the current line
@@ -159,20 +167,8 @@ autocmd BufWritePre *\(.md\)\@<! :%s/\s\+$//e
 autocmd BufEnter *.less set filetype=less
 " hogan
 autocmd BufEnter *.hjs set filetype=handlebars
-
-" My Key bindings
-" nmap <C-h> <C-w>h
-" nmap <C-j> <C-w>j
-" nmap <C-k> <C-w>k
-" nmap <C-l> <C-w>l
-
-inoremap <S-Esc> <C-n>
-inoremap <C-Esc> <C-p>
-
-" Bubble single lines (kicks butt)
-" http://vimcasts.org/episodes/bubbling-text/
-nmap <CA-Up> ddkP
-nmap <CA-Down> ddp
+" GO
+autocmd FileType go autocmd BufWritePre <buffer> Fmt
 
 " no arrows
 inoremap <Left>  <NOP>
@@ -196,6 +192,10 @@ nmap <Leader>f :Ack<space>
 " Plugins configuration
 " always start indent guides
 let indent_guides_enable_on_vim_startup = 1
+if !has("gui_running")
+  let g:indent_guides_auto_colors = 0
+  autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=233
+endif
 
 " use a space in coments
 let NERDSpaceDelims = 1
@@ -216,12 +216,27 @@ let g:neocomplcache_enable_at_startup = 1
 let g:neocomplcache_enable_auto_select = 1
 set completeopt-=preview
 
+" Enable omni completion.
+" autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+" autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+" autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+" autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+" autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+" autocmd FileType go setlocal omnifunc=go#complete#Complete
+
+" Enable heavy omni completion.
+if !exists('g:neocomplcache_omni_patterns')
+  let g:neocomplcache_omni_patterns = {}
+endif
+let g:neocomplcache_omni_patterns.go = '\h\w*\.\?'
+
 " Scratch
-nmap <Leader>d :Sscratch<CR>
+nmap <Leader>d :Sscratch<CR>:q<CR>:b __Scratch__<CR>
+nmap <Leader>D :b __Scratch__<CR>:b#<CR>
 
 " Syntastic
 let g:syntastic_check_on_open = 1
-let g:syntastic_auto_jump = 1
+" let g:syntastic_auto_jump = 1
 let g:syntastic_always_populate_loc_list = 1
 
 " Source the vimrc file after saving it. This way, you don't have to reload Vim to see the changes.
