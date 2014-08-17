@@ -75,6 +75,9 @@ for i in ${!confFiles[@]}; do
   echo "${dest} installed!"
 done
 
+# create custom env folder for zsh
+mkdir ~/.env
+
 # install vim
 sh vim/install.sh
 

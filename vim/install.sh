@@ -13,9 +13,9 @@ git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
 mkdir -p ~/.vim/tmp/{backup,swap,undo}
 
 # install all vundle bundles
-vim +BundleInstall +qall
+vim +PluginInstall +qall
 
-# Specific Bundle conf and installation
+# Get current working directory
 CWD=$(pwd)
 
 # tern for vim: install necessary package
