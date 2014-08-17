@@ -53,7 +53,10 @@ mv ~/.config/powerline/config.json ~/.config/powerline/config.json.orig
 ln -s ${CWD}/vim/powerline/config.json ~/.config/powerline/config.json
 
 mv ~/.config/powerline/themes/vim/default.json ~/.config/powerline/themes/vim/default.json.orig
-ln -s ${CWD}/vim/powerline/themes/default.json ~/.config/powerline/themes/vim/default.json
+ln -s ${CWD}/vim/powerline/themes/vim/default.json ~/.config/powerline/themes/vim/default.json
+
+mv ~/.config/powerline/themes/powerline.json ~/.config/powerline/themes/powerline.json.orig
+ln -s ${CWD}/vim/powerline/themes/powerline.json ~/.config/powerline/themes/powerline.json
 
 echo "Powerline: installed. config files in ~/.config/powerline\n"
 
