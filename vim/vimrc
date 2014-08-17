@@ -43,6 +43,7 @@ Bundle 'mattn/emmet-vim'
 Bundle 'Blackrush/vim-gocode'
 Bundle 'wavded/vim-stylus'
 Bundle 'digitaltoad/vim-jade'
+Bundle 'sjl/vitality.vim'
 
 " Clear filetype flags before changing runtimepath to force Vim to reload them.
 filetype off
@@ -150,6 +151,10 @@ set undofile " enable undo
 
 " auto file reloading
 set autoread
+if !has('gui_running')
+  " working thanks to vitality plugin and `set -g focus-events on` in tmux conf
+  autocmd FocusGained,BufEnter * :silent! checktime
+endif
 
 " Color Scheme
 set cursorline          " Higlight the current line
