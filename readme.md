@@ -15,6 +15,7 @@ You can find a copy of my main dotfiles for:
 Installation has been made easy. Just run :)
 
     $ git clone git@github.com:iplog/dotfiles ~/.dotfiles
+    $ cd ~/.dotfiles
     $ ./install.sh
 
 You will be asked for some details in order to generate a custom version of the
@@ -28,7 +29,7 @@ If you only want to install vim:
 
 - Open install.sh
 - Remove the files you do not want from `confFiles` and `dests`
-- Run 
+- Run
 
     $ ./install.sh
 
