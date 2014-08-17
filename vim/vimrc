@@ -12,7 +12,6 @@ call vundle#rc()
 " required!
 Bundle 'gmarik/vundle'
 Bundle 'mileszs/ack.vim.git'
-" Bundle 'scrooloose/nerdtree'
 Bundle 'tpope/vim-vinegar'
 Bundle 'scrooloose/nerdcommenter'
 Bundle 'scrooloose/syntastic'
@@ -45,11 +44,6 @@ Bundle 'Blackrush/vim-gocode'
 Bundle 'wavded/vim-stylus'
 Bundle 'digitaltoad/vim-jade'
 
-" Bundle 'embear/vim-localvimrc'
-" Bundle 'jelera/vim-gummybears-colorscheme'
-" for the js syntax additions
-" Bundle 'tangphillip/SunburstVIM.git'
-
 " Clear filetype flags before changing runtimepath to force Vim to reload them.
 filetype off
 filetype plugin indent off
@@ -62,9 +56,7 @@ filetype indent on
 syntax on
 
 " color settings (if terminal/gui supports it)
-if $TERM =~ '256color'
-  set t_Co=256
-elseif $TERM =~ '^xterm$'
+if $TERM =~ '256color' || $TERM =~ '^xterm$'
   set t_Co=256
 endif
 
@@ -172,20 +164,6 @@ autocmd BufEnter *.less set filetype=less
 autocmd BufEnter *.hjs set filetype=handlebars
 " GO
 autocmd FileType go autocmd BufWritePre <buffer> Fmt
-
-" My Key bindings
-" nmap <C-h> <C-w>h
-" nmap <C-j> <C-w>j
-" nmap <C-k> <C-w>k
-" nmap <C-l> <C-w>l
-
-" inoremap <S-Esc> <C-n>
-" inoremap <C-Esc> <C-p>
-
-" Bubble single lines (kicks butt)
-" http://vimcasts.org/episodes/bubbling-text/
-nmap <CA-Up> ddkP
-nmap <CA-Down> ddp
 
 " no arrows
 inoremap <Left>  <NOP>
