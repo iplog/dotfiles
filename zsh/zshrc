@@ -44,6 +44,21 @@ plugins=(git bower brew heroku colorize node npm themes osx terminalapp vi-mode)
 
 source $ZSH/oh-my-zsh.sh
 
+## Vi mode tweaks
+# https://github.com/vodik/dotfiles/blob/5d4b2f7e1efe36d3dd2d73540f2ea2f08033f5b0/shell/zsh/bindkeys.zsh#L16
+# bindkey -v # Use vi-mode omzsh plugin :)
+# shift-tab
+if [[ -n $terminfo[kcbt] ]]; then
+  bindkey "$terminfo[kcbt]" reverse-menu-complete
+fi
+
+# delete
+if [[ -n $terminfo[kdch1] ]]; then
+  bindkey          "$terminfo[kdch1]" delete-char
+  bindkey -M vicmd "$terminfo[kdch1]" vi-delete-char
+fi
+
+
 # Customize to your needs...
 # node
 export PATH=~/node_modules/.bin:$PATH
