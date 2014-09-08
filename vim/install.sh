@@ -47,6 +47,8 @@ fi
 if [ -r ~/.config/powerline ]; then
   mv ~/.config/powerline ~/.config/powerline.orig
 fi
+
+mkdir ~/.config/powerline
 cp -R ~/.vim/bundle/powerline/powerline/config_files/* ~/.config/powerline
 
 mv ~/.config/powerline/config.json ~/.config/powerline/config.json.orig
