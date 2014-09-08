@@ -3,47 +3,49 @@ if &compatible          " only if not set before:
   set nocompatible      " use vim-defaults instead of vi-defaults (easier, more user friendly)
 endif
 
-" filetype off                   " required! -> but bug with git
+filetype off                   " required!
 
 set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
+call vundle#begin()
 
 " let Vundle manage Vundle
 " required!
-Bundle 'gmarik/vundle'
-Bundle 'mileszs/ack.vim.git'
-Bundle 'tpope/vim-vinegar'
-Bundle 'scrooloose/nerdcommenter'
-Bundle 'scrooloose/syntastic'
-Bundle 'groenewege/vim-less'
-Bundle 'nono/vim-handlebars'
-Bundle 'othree/html5.vim'
-Bundle 'elzr/vim-json'
-Bundle 'tpope/vim-surround'
-Bundle 'jiangmiao/auto-pairs'
-Bundle 'tpope/vim-sensible.git'
-Bundle 'nathanaelkane/vim-indent-guides'
-Bundle 'tpope/vim-markdown'
-Bundle 'vim-scripts/scratch.vim'
-Bundle 'Shougo/neocomplcache.vim'
-Bundle 'pangloss/vim-javascript'
-Bundle 'bufkill.vim'
-Bundle 'kien/ctrlp.vim'
-Bundle 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
-Bundle 'terryma/vim-multiple-cursors'
-Bundle 'majutsushi/tagbar'
-Bundle 'marijnh/tern_for_vim'
-Bundle 'skwp/greplace.vim'
-Bundle 'smerrill/vcl-vim-plugin'
-Bundle 'ap/vim-css-color'
-Bundle 'kchmck/vim-coffee-script'
-Bundle 'iplog/vim-lollipops'
-Bundle 'sdanielf/vim-stdtabs'
-Bundle 'mattn/emmet-vim'
-Bundle 'Blackrush/vim-gocode'
-Bundle 'wavded/vim-stylus'
-Bundle 'digitaltoad/vim-jade'
-Bundle 'sjl/vitality.vim'
+Plugin 'gmarik/vundle'
+Plugin 'ervandew/ag'
+Plugin 'tpope/vim-vinegar'
+Plugin 'scrooloose/nerdcommenter'
+Plugin 'scrooloose/syntastic'
+Plugin 'groenewege/vim-less'
+Plugin 'nono/vim-handlebars'
+Plugin 'othree/html5.vim'
+Plugin 'elzr/vim-json'
+Plugin 'tpope/vim-surround'
+Plugin 'jiangmiao/auto-pairs'
+Plugin 'tpope/vim-sensible.git'
+Plugin 'nathanaelkane/vim-indent-guides'
+Plugin 'tpope/vim-markdown'
+Plugin 'vim-scripts/scratch.vim'
+Plugin 'Shougo/neocomplcache.vim'
+Plugin 'pangloss/vim-javascript'
+Plugin 'bufkill.vim'
+Plugin 'kien/ctrlp.vim'
+Plugin 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
+" Plugin 'terryma/vim-multiple-cursors'
+Plugin 'majutsushi/tagbar'
+Plugin 'marijnh/tern_for_vim'
+Plugin 'skwp/greplace.vim'
+Plugin 'smerrill/vcl-vim-plugin'
+Plugin 'ap/vim-css-color'
+Plugin 'kchmck/vim-coffee-script'
+Plugin 'iplog/vim-lollipops'
+Plugin 'sdanielf/vim-stdtabs'
+Plugin 'mattn/emmet-vim'
+Plugin 'Blackrush/vim-gocode'
+Plugin 'wavded/vim-stylus'
+Plugin 'digitaltoad/vim-jade'
+Plugin 'sjl/vitality.vim'
+
+call vundle#end()            " required
 
 " Clear filetype flags before changing runtimepath to force Vim to reload them.
 filetype off
@@ -186,8 +188,9 @@ nnoremap <Down>  <NOP>
 "Shortcut for editing  vimrc file in a new tab
 nmap <leader>ev :tabedit $MYVIMRC<cr>
 
-" Ack
-nmap <Leader>f :Ack<space>
+" Ag
+nmap <Leader>f :Ag<space>
+let g:AgSmartCase = 1
 
 " Plugins configuration
 " always start indent guides
