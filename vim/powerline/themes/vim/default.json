@@ -16,11 +16,6 @@
 				"priority": 10
 			},
 			{
-				"function": "branch",
-				"exclude_modes": ["nc"],
-				"priority": 30
-			},
-			{
 				"function": "readonly_indicator",
 				"draw_soft_divider": false,
 				"after": " "

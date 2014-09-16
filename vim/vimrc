@@ -30,7 +30,6 @@ Plugin 'pangloss/vim-javascript'
 Plugin 'bufkill.vim'
 Plugin 'kien/ctrlp.vim'
 Plugin 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
-" Plugin 'terryma/vim-multiple-cursors'
 Plugin 'majutsushi/tagbar'
 Plugin 'marijnh/tern_for_vim'
 Plugin 'skwp/greplace.vim'
