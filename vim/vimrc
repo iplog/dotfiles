@@ -1,50 +1,62 @@
-" reset vim  to vim-defaults
+" Reset vim  to vim-defaults
 if &compatible          " only if not set before:
   set nocompatible      " use vim-defaults instead of vi-defaults (easier, more user friendly)
 endif
 
 filetype off                   " required!
 
-set rtp+=~/.vim/bundle/vundle/
-call vundle#begin()
+set rtp+=~/.vim/bundle/neobundle.vim/
+call neobundle#begin(expand('~/.vim/bundle/'))
 
-" let Vundle manage Vundle
-" required!
-Plugin 'gmarik/vundle'
-Plugin 'ervandew/ag'
-Plugin 'tpope/vim-vinegar'
-Plugin 'scrooloose/nerdcommenter'
-Plugin 'scrooloose/syntastic'
-Plugin 'groenewege/vim-less'
-Plugin 'nono/vim-handlebars'
-Plugin 'othree/html5.vim'
-Plugin 'elzr/vim-json'
-Plugin 'tpope/vim-surround'
-Plugin 'jiangmiao/auto-pairs'
-Plugin 'tpope/vim-sensible.git'
-Plugin 'nathanaelkane/vim-indent-guides'
-Plugin 'tpope/vim-markdown'
-Plugin 'vim-scripts/scratch.vim'
-Plugin 'Shougo/neocomplcache.vim'
-Plugin 'pangloss/vim-javascript'
-Plugin 'bufkill.vim'
-Plugin 'kien/ctrlp.vim'
-Plugin 'Lokaltog/powerline', {'rtp': 'powerline/bindings/vim/'}
-Plugin 'majutsushi/tagbar'
-Plugin 'marijnh/tern_for_vim'
-Plugin 'skwp/greplace.vim'
-Plugin 'smerrill/vcl-vim-plugin'
-Plugin 'ap/vim-css-color'
-Plugin 'kchmck/vim-coffee-script'
-Plugin 'iplog/vim-lollipops'
-Plugin 'sdanielf/vim-stdtabs'
-Plugin 'mattn/emmet-vim'
-Plugin 'Blackrush/vim-gocode'
-Plugin 'wavded/vim-stylus'
-Plugin 'digitaltoad/vim-jade'
-Plugin 'sjl/vitality.vim'
+" Let NeoBundle manage NeoBundle
+" Required!
+NeoBundleFetch 'Shougo/neobundle.vim'
 
-call vundle#end()            " required
+" System
+NeoBundle 'Shougo/vimproc.vim', {
+  \ 'build' : {
+  \     'mac' : 'make -f make_mac.mak',
+  \     'unix' : 'make -f make_unix.mak',
+  \    },
+  \ }
+" Navigation and utils
+NeoBundle 'Shougo/unite.vim'
+NeoBundle 'Shougo/vimfiler.vim'
+NeoBundle 'bufkill.vim'
+NeoBundle 'majutsushi/tagbar'
+NeoBundle 'sjl/vitality.vim'
+NeoBundle 'vim-scripts/scratch.vim'
+" Edition
+NeoBundle 'Shougo/neocomplcache.vim'
+NeoBundle 'jiangmiao/auto-pairs'
+NeoBundle 'marijnh/tern_for_vim', { 'build': { 'others': 'npm install' } }
+NeoBundle 'nathanaelkane/vim-indent-guides'
+NeoBundle 'scrooloose/nerdcommenter'
+NeoBundle 'scrooloose/syntastic'
+NeoBundle 'sdanielf/vim-stdtabs'
+NeoBundle 'skwp/greplace.vim'
+NeoBundle 'tpope/vim-sensible.git'
+NeoBundle 'tpope/vim-surround'
+" UI
+NeoBundle 'Lokaltog/powerline', { 'rtp': 'powerline/bindings/vim/' }
+NeoBundle 'iplog/vim-lollipops', { 'script_type' : 'colors' }
+" Syntax
+NeoBundle 'Blackrush/vim-gocode'
+NeoBundle 'ap/vim-css-color'
+NeoBundle 'digitaltoad/vim-jade'
+NeoBundle 'elzr/vim-json'
+NeoBundle 'groenewege/vim-less'
+NeoBundle 'heavenshell/vim-jsdoc'
+NeoBundle 'kchmck/vim-coffee-script'
+NeoBundle 'mattn/emmet-vim'
+NeoBundle 'nono/vim-handlebars'
+NeoBundle 'othree/html5.vim'
+NeoBundle 'pangloss/vim-javascript'
+NeoBundle 'smerrill/vcl-vim-plugin'
+NeoBundle 'tpope/vim-markdown'
+NeoBundle 'wavded/vim-stylus'
+
+call neobundle#end() " Required
 
 " Clear filetype flags before changing runtimepath to force Vim to reload them.
 filetype off
@@ -57,7 +69,7 @@ filetype plugin on
 filetype indent on
 syntax on
 
-" color settings (if terminal/gui supports it)
+" Color settings (if terminal/gui supports it)
 if $TERM =~ '256color' || $TERM =~ '^xterm$'
   set t_Co=256
 endif
@@ -68,7 +80,7 @@ if &t_Co > 2 || has("gui_running")
   set incsearch      " search incremently (search while typing)
 endif
 
-" display settings
+" Display settings
 set background=dark     " enable for dark terminals
 set scrolloff=2         " 2 lines above/below cursor when scrolling
 set number              " show line numbers
@@ -84,7 +96,11 @@ set matchtime=2         " show matching bracket for 0.2 seconds
 set showmatch           " show matching bracket (briefly jump)
 set matchpairs+=<:>     " specially for html
 
-" editor settings
+" Color Scheme
+set cursorline          " Higlight the current line
+colorscheme lollipops
+
+" Editor settings
 set colorcolumn=80      " Colum lenght
 set esckeys             " map missed escape sequences (enables keypad keys)
 set autoindent smartindent      " turn on auto/smart indenting
@@ -104,7 +120,7 @@ set fileformat=unix     " file mode is unix
 set diffopt=filler,iwhite       " ignore all whitespace and sync
 " set autowrite       "Write the old file out when switching between files.
 
-" encoding
+" Encoding
 set encoding=utf-8
 set fileencoding=utf-8
 
@@ -123,7 +139,7 @@ set incsearch
 set showmatch
 set smartcase           " but become case sensitive if you type uppercase characters
 
-" system settings
+" System settings
 set lazyredraw          " no redraws in macros
 set confirm             " get a dialog when :q, :w, or :wq fails
 "set viminfo=%100,'100,/100,h,\"500,:100,n~/.vim/viminfo
@@ -136,11 +152,8 @@ set mousehide           "Hide mouse when typing
 
 " Share OS clipboard
 set clipboard=unnamed
-if $TMUX == ''
-  set clipboard+=unnamed
-endif
 
-" characters list incrementation
+" Characters list incrementation
 set nrformats+=alpha
 
 " Backups
@@ -150,70 +163,46 @@ set undodir=~/.vim/tmp/undo// " undo files
 set backup " enable backup
 set undofile " enable undo
 
-" auto file reloading
+" Auto file reloading
 set autoread
 if !has('gui_running')
   " working thanks to vitality plugin and `set -g focus-events on` in tmux conf
   autocmd FocusGained,BufEnter * :silent! checktime
 endif
 
-" Color Scheme
-set cursorline          " Higlight the current line
-colorscheme lollipops
-
 " File type specifics
 " All Trim trailing whitespace when saving a document
 autocmd BufWritePre *\(.md\)\@<! :%s/\s\+$//e
 " Less
 autocmd BufEnter *.less set filetype=less
-" hogan
+" Handlebars
 autocmd BufEnter *.hjs set filetype=handlebars
 " GO
 autocmd FileType go autocmd BufWritePre <buffer> Fmt
 
-" no arrows
-inoremap <Left>  <NOP>
-inoremap <Right> <NOP>
-inoremap <Up>    <NOP>
-inoremap <Down>  <NOP>
-nnoremap <Left>  <NOP>
-nnoremap <Right> <NOP>
-nnoremap <Up>    <NOP>
-nnoremap <Down>  <NOP>
-
 " Want a different map leader than \
 " set mapleader = ","
 
-"Shortcut for editing  vimrc file in a new tab
+" Plugins configuration and shortcuts
+" System
 nmap <leader>ev :tabedit $MYVIMRC<cr>
 
-" Ag
-nmap <Leader>f :Ag<space>
-let g:AgSmartCase = 1
-
-" Plugins configuration
-" always start indent guides
+" IndentGuides
 let indent_guides_enable_on_vim_startup = 1
 if !has("gui_running")
   let g:indent_guides_auto_colors = 0
   autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=233
 endif
 
-" use a space in coments
+" NERDCommenter
 let NERDSpaceDelims = 1
 
-" ctrlp
-nmap <Leader>t :CtrlP<CR>
-nmap <Leader>o :CtrlPBuffer<CR>
-nmap <Leader>T :CtrlPClearCache<CR>:CtrlP<CR>
-let g:ctrlp_match_window = 'results:20'
-
-" tagbar
+" Tagbar
 nmap <Leader>r :TagbarToggle<CR>
 let g:tagbar_autofocus = 1
 let g:tagbar_autoclose = 1
 
-" neocomplcache
+" Neocomplcache
 let g:neocomplcache_enable_at_startup = 1
 let g:neocomplcache_enable_auto_select = 1
 set completeopt-=preview
@@ -238,8 +227,68 @@ nmap <Leader>D :b __Scratch__<CR>:b#<CR>
 
 " Syntastic
 let g:syntastic_check_on_open = 1
-" let g:syntastic_auto_jump = 1
 let g:syntastic_always_populate_loc_list = 1
+let g:syntastic_aggregate_errors = 1
+let g:syntastic_javascript_checkers = ['jscs', 'jshint']
+
+" Unite
+"" Unite Buffet
+autocmd FileType unite call s:unite_settings()
+
+"" Unite settings
+call unite#custom#profile('default', 'context', {
+  \ 'winheight': 15,
+  \ 'direction': 'botright',
+  \ 'prompt_direction': 'below',
+  \ 'cursor_line_highlight': 'CursorLine'
+  \ })
+call unite#custom#source('file,file/new,buffer,file_rec',
+  \ 'matchers', 'matcher_fuzzy')
+call unite#custom#source('buffer,file,file_rec', 'sorters', 'sorter_rank')
+
+if executable('ag')
+  " Use ag recursive async. Ignore files gitignore
+  let g:unite_source_rec_async_command='ag --nocolor --nogroup -g ""'
+  " Use ag in unite grep source.
+  let g:unite_source_grep_command = 'ag'
+  let g:unite_source_grep_default_opts =
+    \ '-i --line-numbers --nocolor --nogroup --hidden --ignore ' .
+    \  '''.hg'' --ignore ''.svn'' --ignore ''.git'' --ignore ''.bzr'''
+  let g:unite_source_grep_recursive_opt = ''
+endif
+
+"" Unite mappings
+nnoremap <leader>f :<C-u>Unite grep:.<CR>
+nnoremap <leader>F :<C-u>Unite grep:.:-C2<CR>
+nnoremap <leader>t :<C-u>Unite -start-insert file_rec/async:!<CR>
+nnoremap <leader>o :<C-u>Unite -start-insert buffer bookmark<CR>
+nnoremap <leader>ma :<C-u>Unite mapping<CR>
+
+"" Unite functions
+function! s:unite_settings()
+  imap <buffer> <C-j>   <Plug>(unite_select_next_line)
+  imap <buffer> <C-k>   <Plug>(unite_select_previous_line)
+  imap <silent><buffer><expr> <C-x> unite#do_action('split')
+  imap <silent><buffer><expr> <C-v> unite#do_action('vsplit')
+  nmap <buffer> <ESC> <Plug>(unite_exit)
+endfunction
+
+" VimFiler
+let g:vimfiler_as_default_explorer = 1
+call vimfiler#custom#profile('default', 'context', {
+  \ 'safe' : 0
+  \ })
+nnoremap - :VimFilerBufferDir -create<CR>
+
+" No arrows
+inoremap <Left>  <NOP>
+inoremap <Right> <NOP>
+inoremap <Up>    <NOP>
+inoremap <Down>  <NOP>
+nnoremap <Left>  <NOP>
+nnoremap <Right> <NOP>
+nnoremap <Up>    <NOP>
+nnoremap <Down>  <NOP>
 
 " Source the vimrc file after saving it. This way, you don't have to reload Vim to see the changes.
 if has("autocmd")

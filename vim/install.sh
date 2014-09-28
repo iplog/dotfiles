@@ -13,7 +13,7 @@ git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
 mkdir -p ~/.vim/tmp/{backup,swap,undo}
 
 # install all vundle bundles
-vim +PluginInstall +qall
+vim +NeoBundleInstall +qall
 
 # Get current working directory
 CWD=$(pwd)
@@ -37,7 +37,7 @@ if [ ! -r ~/.cache ]; then
   mkdir ~/.cache
 fi
 if [ ! -r ~/.cache/ctrlp ]; then
-  mkdir ~/.cache/ctrlp
+  mkdir ~/.cache/unite
 fi
 
 # powerline
