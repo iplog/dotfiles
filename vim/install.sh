@@ -18,20 +18,6 @@ vim +NeoBundleInstall +qall
 # Get current working directory
 CWD=$(pwd)
 
-# tern for vim: install necessary package
-if [ command -v /usr/bin/node 2>/dev/null ] || [ command -v /usr/local/bin/node 2>/dev/null ]; then
-  cd ~/.vim/bundle/tern_for_vim
-  npm install
-  cd $CWD
-
-  echo "Tern for vim: installed\n"
-else
-  echo "Node is not installed. Tern for vim installation has not been completed."
-  echo "To finish the installation, install nodejs and then do:\n"
-  echo "  cd ~/.vim/bundle/tern_for_vim"
-  echo "  npm install\n"
-fi
-
 # ctrlp: create some folders (avoid problem with folder created as root)
 if [ ! -r ~/.cache ]; then
   mkdir ~/.cache
