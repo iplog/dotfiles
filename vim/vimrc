@@ -244,7 +244,8 @@ call unite#custom#profile('default', 'context', {
   \ })
 call unite#custom#source('file,file/new,buffer,file_rec',
   \ 'matchers', 'matcher_fuzzy')
-call unite#custom#source('buffer,file,file_rec', 'sorters', 'sorter_rank')
+call unite#custom#source('buffer,file,file_rec', 'sorters', ['sorter_rank'])
+call unite#custom#alias('file', 'delete', 'vimfiler__delete')
 
 if executable('ag')
   " Use ag recursive async. Ignore files gitignore
@@ -258,8 +259,8 @@ if executable('ag')
 endif
 
 "" Unite mappings
-nnoremap <leader>f :<C-u>Unite grep:.<CR>
-nnoremap <leader>F :<C-u>Unite grep:.:-C2<CR>
+nnoremap <leader>f :<C-u>Unite -buffer-name=Search -no-quit grep:<CR>
+nnoremap <leader>F :<C-u>Unite -buffer-name=SearchContext -no-quit grep::-C2<CR>
 nnoremap <leader>t :<C-u>Unite -start-insert file_rec/async:!<CR>
 nnoremap <leader>o :<C-u>Unite -start-insert buffer bookmark<CR>
 nnoremap <leader>ma :<C-u>Unite mapping<CR>
