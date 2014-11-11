@@ -12,34 +12,29 @@ call neobundle#begin(expand('~/.vim/bundle/'))
 " Required!
 NeoBundleFetch 'Shougo/neobundle.vim'
 
-" System
-NeoBundle 'Shougo/vimproc.vim', {
-  \ 'build' : {
-  \     'mac' : 'make -f make_mac.mak',
-  \     'unix' : 'make -f make_unix.mak',
-  \    },
-  \ }
 " Navigation and utils
-NeoBundle 'Shougo/unite.vim'
-NeoBundle 'Shougo/vimfiler.vim'
 NeoBundle 'bufkill.vim'
+NeoBundle 'ervandew/ag'
+NeoBundle 'kien/ctrlp.vim'
 NeoBundle 'majutsushi/tagbar'
+NeoBundle 'tpope/vim-vinegar'
 NeoBundle 'sjl/vitality.vim'
 NeoBundle 'vim-scripts/scratch.vim'
 " Edition
-NeoBundle 'Shougo/neocomplcache.vim'
 NeoBundle 'jiangmiao/auto-pairs'
-NeoBundle 'marijnh/tern_for_vim', { 'build': { 'others': 'npm install' } }
-NeoBundle 'nathanaelkane/vim-indent-guides'
 NeoBundle 'scrooloose/nerdcommenter'
-NeoBundle 'scrooloose/syntastic'
 NeoBundle 'sdanielf/vim-stdtabs'
 NeoBundle 'skwp/greplace.vim'
 NeoBundle 'tpope/vim-sensible.git'
 NeoBundle 'tpope/vim-surround'
+" Code completion and check
+NeoBundle 'Shougo/neocomplcache.vim'
+NeoBundle 'marijnh/tern_for_vim', { 'build': { 'others': 'npm install' } }
+NeoBundle 'scrooloose/syntastic'
 " UI
 NeoBundle 'Lokaltog/powerline', { 'rtp': 'powerline/bindings/vim/' }
 NeoBundle 'iplog/vim-lollipops', { 'script_type' : 'colors' }
+NeoBundle 'nathanaelkane/vim-indent-guides'
 " Syntax
 NeoBundle 'Blackrush/vim-gocode'
 NeoBundle 'ap/vim-css-color'
@@ -57,6 +52,7 @@ NeoBundle 'tpope/vim-markdown'
 NeoBundle 'wavded/vim-stylus'
 
 call neobundle#end() " Required
+command! -nargs=+ NewGrep execute 'silent grep! <args>' | copen 14
 
 " Clear filetype flags before changing runtimepath to force Vim to reload them.
 filetype off
@@ -187,6 +183,24 @@ autocmd FileType go autocmd BufWritePre <buffer> Fmt
 " System
 nmap <leader>ev :tabedit $MYVIMRC<cr>
 
+" Ag
+nmap <Leader>f :Ag<Space>
+let g:AgSmartCase = 1
+
+" Ctrlp
+nmap <Leader>t :CtrlP<CR>
+nmap <Leader>o :CtrlPBuffer<CR>
+nmap <Leader>T :CtrlPClearCache<CR>:CtrlP<CR>
+let g:ctrlp_match_window = 'results:20'
+
+if executable('ag')
+  " http://robots.thoughtbot.com/faster-grepping-in-vim
+  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
+  let g:ctrlp_user_command = 'ag %s -l --nocolor -U -g ""'
+  " ag is fast enough that CtrlP doesn't need to cache
+  let g:ctrlp_use_caching = 0
+endif
+
 " IndentGuides
 let indent_guides_enable_on_vim_startup = 1
 if !has("gui_running")
@@ -194,13 +208,12 @@ if !has("gui_running")
   autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=233
 endif
 
-" NERDCommenter
-let NERDSpaceDelims = 1
-
-" Tagbar
-nmap <Leader>r :TagbarToggle<CR>
-let g:tagbar_autofocus = 1
-let g:tagbar_autoclose = 1
+" greplace
+if executable('ag')
+  " Use ag over grep
+  set grepprg=ag
+  let g:grep_cmd_opts = '--nocolor --line-numbers --noheading'
+endif
 
 " Neocomplcache
 let g:neocomplcache_enable_at_startup = 1
@@ -221,6 +234,14 @@ if !exists('g:neocomplcache_omni_patterns')
 endif
 let g:neocomplcache_omni_patterns.go = '\h\w*\.\?'
 
+" NERDCommenter
+let NERDSpaceDelims = 1
+
+" Tagbar
+nmap <Leader>r :TagbarToggle<CR>
+let g:tagbar_autofocus = 1
+let g:tagbar_autoclose = 1
+
 " Scratch
 nmap <Leader>d :Sscratch<CR>:q<CR>:b __Scratch__<CR>
 nmap <Leader>D :b __Scratch__<CR>:b#<CR>
@@ -230,56 +251,6 @@ let g:syntastic_check_on_open = 1
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_aggregate_errors = 1
 let g:syntastic_javascript_checkers = ['jscs', 'jshint']
-
-" Unite
-"" Unite Buffet
-autocmd FileType unite call s:unite_settings()
-
-"" Unite settings
-call unite#custom#profile('default', 'context', {
-  \ 'winheight': 15,
-  \ 'direction': 'botright',
-  \ 'prompt_direction': 'below',
-  \ 'cursor_line_highlight': 'CursorLine'
-  \ })
-call unite#custom#source('file,file/new,buffer,file_rec',
-  \ 'matchers', 'matcher_fuzzy')
-call unite#custom#source('buffer,file,file_rec', 'sorters', ['sorter_rank'])
-call unite#custom#alias('file', 'delete', 'vimfiler__delete')
-
-if executable('ag')
-  " Use ag recursive async. Ignore files gitignore
-  let g:unite_source_rec_async_command='ag --nocolor --nogroup -g ""'
-  " Use ag in unite grep source.
-  let g:unite_source_grep_command = 'ag'
-  let g:unite_source_grep_default_opts =
-    \ '-i --line-numbers --nocolor --nogroup --hidden --ignore ' .
-    \  '''.hg'' --ignore ''.svn'' --ignore ''.git'' --ignore ''.bzr'''
-  let g:unite_source_grep_recursive_opt = ''
-endif
-
-"" Unite mappings
-nnoremap <leader>f :<C-u>Unite -buffer-name=Search -no-quit grep:<CR>
-nnoremap <leader>F :<C-u>Unite -buffer-name=SearchContext -no-quit grep::-C2<CR>
-nnoremap <leader>t :<C-u>Unite -start-insert file_rec/async:!<CR>
-nnoremap <leader>o :<C-u>Unite -start-insert buffer bookmark<CR>
-nnoremap <leader>ma :<C-u>Unite mapping<CR>
-
-"" Unite functions
-function! s:unite_settings()
-  imap <buffer> <C-j>   <Plug>(unite_select_next_line)
-  imap <buffer> <C-k>   <Plug>(unite_select_previous_line)
-  imap <silent><buffer><expr> <C-x> unite#do_action('split')
-  imap <silent><buffer><expr> <C-v> unite#do_action('vsplit')
-  nmap <buffer> <ESC> <Plug>(unite_exit)
-endfunction
-
-" VimFiler
-let g:vimfiler_as_default_explorer = 1
-call vimfiler#custom#profile('default', 'context', {
-  \ 'safe' : 0
-  \ })
-nnoremap - :VimFilerBufferDir -create<CR>
 
 " No arrows
 inoremap <Left>  <NOP>
