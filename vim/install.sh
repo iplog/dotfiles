@@ -6,14 +6,16 @@ if [ -r ~/.vim ] && [ ! -r ~/.vim.orig ]; then
   mv ~/.vim ~/.vim.orig
 fi
 
-# install vundle
-git clone https://github.com/gmarik/vundle.git ~/.vim/bundle/vundle
+# install VimPlug
+mkdir -p ~/.vim/autoload
+curl -fLo ~/.vim/autoload/plug.vim \
+    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 
 # Add some folders for swap, bakcup and undo files
 mkdir -p ~/.vim/tmp/{backup,swap,undo}
 
 # install all vundle bundles
-vim +NeoBundleInstall +qall
+vim +PlugInstall +qall
 
 # Get current working directory
 CWD=$(pwd)
@@ -35,7 +37,7 @@ if [ -r ~/.config/powerline ]; then
 fi
 
 mkdir ~/.config/powerline
-cp -R ~/.vim/bundle/powerline/powerline/config_files/* ~/.config/powerline
+cp -R ~/.vim/plugged/powerline/powerline/config_files/* ~/.config/powerline
 
 mv ~/.config/powerline/config.json ~/.config/powerline/config.json.orig
 ln -s ${CWD}/vim/powerline/config.json ~/.config/powerline/config.json
