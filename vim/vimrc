@@ -7,12 +7,10 @@ endif
 call plug#begin('~/.vim/plugged') " Required!
 " Navigation and utils
 Plug 'bufkill.vim'
-Plug 'ervandew/ag'
 Plug 'kien/ctrlp.vim'
 Plug 'majutsushi/tagbar'
 Plug 'tpope/vim-vinegar'
 Plug 'sjl/vitality.vim'
-Plug 'vim-scripts/scratch.vim'
 " Edition
 Plug 'jiangmiao/auto-pairs'
 Plug 'scrooloose/nerdcommenter'
@@ -21,12 +19,12 @@ Plug 'skwp/greplace.vim'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
 " Code completion and check
-Plug 'Valloric/YouCompleteMe', { 'do': './install.sh' }
-" Plug 'Shougo/neocomplcache.vim'
+" Plug 'Valloric/YouCompleteMe', { 'do': './install.sh' }
+Plug 'Shougo/neocomplcache.vim'
 Plug 'marijnh/tern_for_vim', { 'do': 'npm install' }
 Plug 'scrooloose/syntastic'
 " UI
-Plug 'Lokaltog/powerline', { 'rtp': 'powerline/bindings/vim/' }
+Plug 'bling/vim-airline'
 Plug 'iplog/vim-lollipops'
 Plug 'nathanaelkane/vim-indent-guides'
 " Syntax
@@ -44,6 +42,9 @@ Plug 'pangloss/vim-javascript'
 Plug 'smerrill/vcl-vim-plugin'
 Plug 'tpope/vim-markdown'
 Plug 'wavded/vim-stylus'
+" Misc
+Plug 'vim-scripts/scratch.vim'
+Plug 'mrtazz/simplenote.vim'
 
 call plug#end() " Required!
 
@@ -176,9 +177,17 @@ autocmd FileType go autocmd BufWritePre <buffer> Fmt
 " System
 nmap <leader>ev :tabedit $MYVIMRC<cr>
 
+" Airline
+let g:airline_left_sep = ''
+let g:airline_right_sep = ''
+let g:airline#extensions#csv#enabled = 0
+let g:airline#extensions#syntastic#enabled = 0
+
 " Ag
-nmap <Leader>f :Ag<Space>
-let g:AgSmartCase = 1
+if executable('ag')
+  command -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
+  nmap <Leader>f :Ag<Space>
+endif
 
 " Ctrlp
 nmap <Leader>t :CtrlP<CR>
@@ -220,15 +229,16 @@ let g:tagbar_autoclose = 1
 nmap <Leader>d :Sscratch<CR>:q<CR>:b __Scratch__<CR>
 nmap <Leader>D :b __Scratch__<CR>:b#<CR>
 
+" Simplenote
+source ~/.simplenoterc
+let g:SimplenoteNoteFiletype = 'markdown'
+let g:SimplenoteVertical = 1
+
 " Syntastic
 let g:syntastic_check_on_open = 1
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_aggregate_errors = 1
 let g:syntastic_javascript_checkers = ['jscs', 'jshint']
-
-" YouCompleteMe
-let g:ycm_autoclose_preview_window_after_completion = 1
-let g:ycm_show_diagnostics_ui = 0
 
 " No arrows
 inoremap <Left>  <NOP>
