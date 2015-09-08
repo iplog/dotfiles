@@ -18,6 +18,7 @@ Plug 'sdanielf/vim-stdtabs'
 Plug 'skwp/greplace.vim'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
+Plug 'tpope/vim-abolish'
 " Code completion and check
 " Plug 'Valloric/YouCompleteMe', { 'do': './install.sh' }
 Plug 'Shougo/neocomplcache.vim'
@@ -25,10 +26,10 @@ Plug 'marijnh/tern_for_vim', { 'do': 'npm install' }
 Plug 'scrooloose/syntastic'
 " UI
 Plug 'bling/vim-airline'
-Plug 'iplog/vim-lollipops'
+Plug 'iplog/vim-popsicles'
 Plug 'nathanaelkane/vim-indent-guides'
 " Syntax
-Plug 'Blackrush/vim-gocode'
+Plug 'fatih/vim-go'
 Plug 'ap/vim-css-color'
 Plug 'digitaltoad/vim-jade'
 Plug 'elzr/vim-json'
@@ -42,16 +43,13 @@ Plug 'pangloss/vim-javascript'
 Plug 'smerrill/vcl-vim-plugin'
 Plug 'tpope/vim-markdown'
 Plug 'wavded/vim-stylus'
+Plug 'derekwyatt/vim-scala'
 " Misc
 Plug 'vim-scripts/scratch.vim'
 Plug 'mrtazz/simplenote.vim'
+Plug 'takac/vim-hardtime'
 
 call plug#end() " Required!
-
-" Clear filetype flags before changing runtimepath to force Vim to reload them.
-filetype off
-filetype plugin indent off
-set runtimepath+=$GOROOT/misc/vim
 
 " Enable filetypes. required!
 filetype on
@@ -73,8 +71,8 @@ endif
 " Display settings
 set background=dark     " enable for dark terminals
 set scrolloff=2         " 2 lines above/below cursor when scrolling
-set number              " show line numbers
-" set relativenumber
+set number              " show the current line real number
+set relativenumber      " show relative line numbers
 set showmode            " show mode in status bar (insert/replace/...)
 set showcmd             " show typed command in status bar
 set ruler               " show cursor position in status bar
@@ -85,10 +83,10 @@ set laststatus=2        " use 2 lines for the status bar
 set matchtime=2         " show matching bracket for 0.2 seconds
 set showmatch           " show matching bracket (briefly jump)
 set matchpairs+=<:>     " specially for html
+set cursorline          " Higlight the current line
 
 " Color Scheme
-set cursorline          " Higlight the current line
-colorscheme lollipops
+colorscheme popsicles
 
 " Editor settings
 set colorcolumn=80      " Colum lenght
@@ -167,27 +165,28 @@ autocmd BufWritePre *\(.md\)\@<! :%s/\s\+$//e
 autocmd BufEnter *.less set filetype=less
 " Handlebars
 autocmd BufEnter *.hjs set filetype=handlebars
-" GO
-autocmd FileType go autocmd BufWritePre <buffer> Fmt
-
-" Want a different map leader than \
-" set mapleader = ","
 
 " Plugins configuration and shortcuts
 " System
 nmap <leader>ev :tabedit $MYVIMRC<cr>
+
+" Ag
+if executable('ag') && !exists(':Ag')
+  set grepprg=ag  " Use ag over grep
+  let g:grep_cmd_opts = '--nocolor --line-numbers --noheading'
+
+  command -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
+  nmap <Leader>f :Ag<Space>
+  nmap <Leader>F :Ag '\b<C-R><C-W>\b'
+endif
 
 " Airline
 let g:airline_left_sep = ''
 let g:airline_right_sep = ''
 let g:airline#extensions#csv#enabled = 0
 let g:airline#extensions#syntastic#enabled = 0
-
-" Ag
-if executable('ag')
-  command -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
-  nmap <Leader>f :Ag<Space>
-endif
+let g:airline_theme = 'base16'
+set noshowmode
 
 " Ctrlp
 nmap <Leader>t :CtrlP<CR>
@@ -210,12 +209,21 @@ if !has("gui_running")
   autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=233
 endif
 
-" greplace
-if executable('ag')
-  " Use ag over grep
-  set grepprg=ag
-  let g:grep_cmd_opts = '--nocolor --line-numbers --noheading'
+" Go
+" format with goimports instead of gofmt
+let g:go_fmt_command = "goimports"
+
+" neocomplcache
+let g:neocomplcache_enable_at_startup = 1  " Use neocomplcache.
+let g:acp_enableAtStartup = 0  " Disable AutoComplPop.
+autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+if !exists('g:neocomplcache_force_omni_patterns')
+  let g:neocomplcache_force_omni_patterns = {}
 endif
+let g:neocomplcache_force_omni_patterns.go = '\h\w*\%.'
 
 " NERDCommenter
 let NERDSpaceDelims = 1
@@ -230,7 +238,9 @@ nmap <Leader>d :Sscratch<CR>:q<CR>:b __Scratch__<CR>
 nmap <Leader>D :b __Scratch__<CR>:b#<CR>
 
 " Simplenote
-source ~/.simplenoterc
+if filereadable('~/.simplenoterc')
+  source ~/.simplenoterc
+endif
 let g:SimplenoteNoteFiletype = 'markdown'
 let g:SimplenoteVertical = 1
 
@@ -241,14 +251,11 @@ let g:syntastic_aggregate_errors = 1
 let g:syntastic_javascript_checkers = ['jscs', 'jshint']
 
 " No arrows
-inoremap <Left>  <NOP>
-inoremap <Right> <NOP>
-inoremap <Up>    <NOP>
-inoremap <Down>  <NOP>
-nnoremap <Left>  <NOP>
-nnoremap <Right> <NOP>
-nnoremap <Up>    <NOP>
-nnoremap <Down>  <NOP>
+let g:hardtime_default_on = 1
+let g:hardtime_maxcount = 2
+let g:hardtime_allow_different_key = 1
+let g:list_of_normal_keys = ["h", "j", "k", "l", "+", "<UP>", "<DOWN>", "<LEFT>", "<RIGHT>"]
+" let g:hardtime_ignore_quickfix = 1
 
 " Source the vimrc file after saving it. This way, you don't have to reload Vim to see the changes.
 if has("autocmd")
