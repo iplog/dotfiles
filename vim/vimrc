@@ -19,6 +19,7 @@ Plug 'skwp/greplace.vim'
 Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-abolish'
+Plug 'tpope/vim-repeat'
 " Code completion and check
 " Plug 'Valloric/YouCompleteMe', { 'do': './install.sh' }
 Plug 'Shougo/neocomplcache.vim'
@@ -44,6 +45,7 @@ Plug 'smerrill/vcl-vim-plugin'
 Plug 'tpope/vim-markdown'
 Plug 'wavded/vim-stylus'
 Plug 'derekwyatt/vim-scala'
+Plug 'mxw/vim-jsx'
 " Misc
 Plug 'vim-scripts/scratch.vim'
 Plug 'mrtazz/simplenote.vim'
@@ -223,7 +225,7 @@ autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
 if !exists('g:neocomplcache_force_omni_patterns')
   let g:neocomplcache_force_omni_patterns = {}
 endif
-let g:neocomplcache_force_omni_patterns.go = '\h\w*\%.'
+let g:neocomplcache_force_omni_patterns.go = '\h\w*\.\?'
 
 " NERDCommenter
 let NERDSpaceDelims = 1
@@ -248,7 +250,16 @@ let g:SimplenoteVertical = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_aggregate_errors = 1
-let g:syntastic_javascript_checkers = ['jscs', 'jshint']
+if filereadable('.eslintrc')
+  let g:syntastic_javascript_checkers = ['eslint']
+else
+  let g:syntastic_javascript_checkers = ['jshint']
+  if filereadable('.jscsrc')
+    let g:syntastic_javascript_checkers += ['jscs']
+  endif
+endif
+let g:SimplenoteNoteFiletype = 'markdown'
+let g:SimplenoteVertical = 1
 
 " No arrows
 let g:hardtime_default_on = 1
