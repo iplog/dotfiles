@@ -167,6 +167,8 @@ autocmd BufWritePre *\(.md\)\@<! :%s/\s\+$//e
 autocmd BufEnter *.less set filetype=less
 " Handlebars
 autocmd BufEnter *.hjs set filetype=handlebars
+" Git
+autocmd Filetype gitcommit setlocal spell textwidth=72
 
 " Plugins configuration and shortcuts
 " System
