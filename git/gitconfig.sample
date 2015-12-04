@@ -10,7 +10,7 @@
     ci = commit
     co = checkout
     fp = format-patch
-    lg = log --graph --pretty=tformat:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%an %cr)%Creset' --abbrev-commit --date=relative
+    lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %C(bold blue)<%an>%Creset %Cgreen(%cr)' --abbrev-commit
 [core]
     editor = /usr/local/bin/vim
     autocrlf = input
