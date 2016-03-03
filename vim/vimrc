@@ -27,6 +27,7 @@ Plug 'marijnh/tern_for_vim', { 'do': 'npm install' }
 Plug 'scrooloose/syntastic'
 " UI
 Plug 'bling/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 Plug 'iplog/vim-popsicles'
 Plug 'nathanaelkane/vim-indent-guides'
 " Syntax
