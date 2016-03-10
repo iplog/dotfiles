@@ -7,7 +7,9 @@ endif
 call plug#begin('~/.vim/plugged') " Required!
 " Navigation and utils
 Plug 'bufkill.vim'
-Plug 'kien/ctrlp.vim'
+" Plug 'kien/ctrlp.vim'
+Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
+Plug 'junegunn/fzf.vim'
 Plug 'majutsushi/tagbar'
 Plug 'tpope/vim-vinegar'
 Plug 'sjl/vitality.vim'
@@ -175,15 +177,15 @@ autocmd Filetype gitcommit setlocal spell textwidth=72
 " System
 nmap <leader>ev :tabedit $MYVIMRC<cr>
 
-" Ag
-if executable('ag') && !exists(':Ag')
-  set grepprg=ag  " Use ag over grep
-  let g:grep_cmd_opts = '--nocolor --line-numbers --noheading'
+" " Ag
+" if executable('ag') && !exists(':Ag')
+  " set grepprg=ag  " Use ag over grep
+  " let g:grep_cmd_opts = '--nocolor --line-numbers --noheading'
 
-  command -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
-  nmap <Leader>f :Ag<Space>
-  nmap <Leader>F :Ag '\b<C-R><C-W>\b'
-endif
+  " command -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
+  " nmap <Leader>f :Ag<Space>
+  " nmap <Leader>F :Ag '\b<C-R><C-W>\b'
+" endif
 
 " Airline
 let g:airline_left_sep = ''
@@ -193,19 +195,46 @@ let g:airline#extensions#syntastic#enabled = 0
 let g:airline_theme = 'base16'
 set noshowmode
 
-" Ctrlp
-nmap <Leader>t :CtrlP<CR>
-nmap <Leader>o :CtrlPBuffer<CR>
-nmap <Leader>T :CtrlPClearCache<CR>:CtrlP<CR>
-let g:ctrlp_match_window = 'results:20'
+" " Ctrlp
+" nmap <Leader>t :CtrlP<CR>
+" nmap <Leader>o :CtrlPBuffer<CR>
+" nmap <Leader>T :CtrlPClearCache<CR>:CtrlP<CR>
+" let g:ctrlp_match_window = 'results:20'
 
-if executable('ag')
-  " http://robots.thoughtbot.com/faster-grepping-in-vim
-  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
-  let g:ctrlp_user_command = 'ag %s -l --nocolor -U -g ""'
-  " ag is fast enough that CtrlP doesn't need to cache
-  let g:ctrlp_use_caching = 0
-endif
+" if executable('ag')
+  " " http://robots.thoughtbot.com/faster-grepping-in-vim
+  " " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
+  " let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+  " " ag is fast enough that CtrlP doesn't need to cache
+  " let g:ctrlp_use_caching = 0
+" endif
+
+
+" FZF
+function! s:ag_with_opts(arg, bang)
+  let tokens  = split(a:arg)
+  let ag_opts = join(filter(copy(tokens), 'v:val =~ "^-"'))
+  let query   = join(filter(copy(tokens), 'v:val !~ "^-"'))
+  call fzf#vim#ag(query, ag_opts, a:bang ? {} : {'down': '40%'})
+endfunction
+
+autocmd VimEnter * command! -nargs=* -bang Ag call s:ag_with_opts(<q-args>, <bang>0)
+
+" " Ag
+" if executable('ag') && !exists(':Ag')
+  " set grepprg=ag  " Use ag over grep
+  " let g:grep_cmd_opts = '--nocolor --line-numbers --noheading'
+
+  " command -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
+  " nmap <Leader>f :Ag<Space>
+  " nmap <Leader>F :Ag '\b<C-R><C-W>\b'
+" endif
+
+nnoremap <silent> <leader>p :Files<CR>
+nnoremap <silent> <leader>o :Buffers<CR>
+nnoremap <silent> <leader>? :History:<CR>
+nnoremap <silent> <leader>/ :History/<CR>
+nnoremap <silent> <leader>f :Ag<Space>
 
 " IndentGuides
 let indent_guides_enable_on_vim_startup = 1

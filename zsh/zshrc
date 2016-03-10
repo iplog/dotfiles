@@ -45,13 +45,17 @@ plugins=(git bower brew heroku colorize node npm themes osx terminalapp vi-mode 
 source $ZSH/oh-my-zsh.sh
 
 # Customize to your needs...
+# node
+export PATH=~/node_modules/.bin:$PATH
+export PATH=~/local/bin:$PATH
+
 # brew
 export PATH=/usr/local/bin:$PATH
 export PATH=/usr/local/sbin:$PATH
 
-# node
-export PATH=~/node_modules/.bin:$PATH
-export PATH=~/local/bin:$PATH
+# fzf
+export FZF_DEFAULT_COMMAND='ag -g ""'
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 
 ## Vi mode tweaks
 export EDITOR=$(which vim)
