@@ -12,7 +12,7 @@ Plug 'majutsushi/tagbar'
 Plug 'tpope/vim-vinegar'
 Plug 'sjl/vitality.vim'
 " Edition
-Plug 'jiangmiao/auto-pairs'
+" Plug 'jiangmiao/auto-pairs'
 Plug 'scrooloose/nerdcommenter'
 Plug 'sdanielf/vim-stdtabs'
 Plug 'skwp/greplace.vim'
