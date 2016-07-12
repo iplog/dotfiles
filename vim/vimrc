@@ -25,6 +25,7 @@ Plug 'tpope/vim-repeat'
 Plug 'Shougo/neocomplcache.vim'
 Plug 'marijnh/tern_for_vim', { 'do': 'npm install' }
 Plug 'scrooloose/syntastic'
+Plug 'pmsorhaindo/syntastic-local-eslint.vim'
 " UI
 Plug 'bling/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
