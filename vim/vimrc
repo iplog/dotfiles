@@ -7,7 +7,7 @@ endif
 call plug#begin('~/.vim/plugged') " Required!
 " Navigation and utils
 Plug 'bufkill.vim'
-Plug 'kien/ctrlp.vim'
+Plug 'ctrlpvim/ctrlp.vim'
 Plug 'majutsushi/tagbar'
 Plug 'tpope/vim-vinegar'
 Plug 'sjl/vitality.vim'
@@ -198,11 +198,13 @@ nmap <Leader>t :CtrlP<CR>
 nmap <Leader>o :CtrlPBuffer<CR>
 nmap <Leader>T :CtrlPClearCache<CR>:CtrlP<CR>
 let g:ctrlp_match_window = 'results:20'
+let g:ctrlp_bufname_mod = ':~:.:p'
+let g:ctrlp_bufpath_mod = ''
 
 if executable('ag')
   " http://robots.thoughtbot.com/faster-grepping-in-vim
   " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
-  let g:ctrlp_user_command = 'ag %s -l --nocolor -U -g ""'
+  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
   " ag is fast enough that CtrlP doesn't need to cache
   let g:ctrlp_use_caching = 0
 endif
