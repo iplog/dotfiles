@@ -6,7 +6,7 @@ endif
 
 call plug#begin('~/.vim/plugged') " Required!
 " Navigation and utils
-Plug 'bufkill.vim'
+Plug 'qpkorr/vim-bufkill'
 Plug 'ctrlpvim/ctrlp.vim'
 Plug 'majutsushi/tagbar'
 Plug 'tpope/vim-vinegar'
@@ -45,8 +45,11 @@ Plug 'smerrill/vcl-vim-plugin'
 Plug 'tpope/vim-markdown'
 Plug 'wavded/vim-stylus'
 Plug 'mxw/vim-jsx'
+Plug 'vim-erlang/vim-erlang-compiler'
 Plug 'vim-erlang/vim-erlang-runtime'
 Plug 'vim-erlang/vim-erlang-omnicomplete'
+Plug 'vim-erlang/vim-erlang-skeletons'
+Plug 'elixir-editors/vim-elixir'
 " Misc
 Plug 'vim-scripts/scratch.vim'
 Plug 'mrtazz/simplenote.vim'
@@ -172,7 +175,7 @@ autocmd BufEnter *.hjs set filetype=handlebars
 " Git
 autocmd Filetype gitcommit setlocal spell textwidth=72
 
-" Plugins configuration and shortcuts
+" Custom commands
 " System
 nmap <leader>ev :tabedit $MYVIMRC<cr>
 
@@ -186,6 +189,13 @@ if executable('ag') && !exists(':Ag')
   nmap <Leader>F :Ag '\b<C-R><C-W>\b'
 endif
 
+" ctags
+if executable('ctags') && !exists(':MakeTags')
+  command! MakeTags !ctags -R .
+  nmap <Leader>mt :MakeTags<CR>
+endif
+
+" Plugins configuration and shortcuts
 " Airline
 let g:airline_left_sep = ''
 let g:airline_right_sep = ''
@@ -264,10 +274,11 @@ else
     let g:syntastic_javascript_checkers += ['jscs']
   endif
 endif
-let g:SimplenoteNoteFiletype = 'markdown'
-let g:SimplenoteVertical = 1
+let g:syntastic_erlang_checkers=['syntaxerl']
+let g:syntastic_elixir_checkers=['elixir']
+let g:syntastic_enable_elixir_checker=1
 
-" No arrows
+" HardTime - No arrows
 let g:hardtime_default_on = 1
 let g:hardtime_maxcount = 2
 let g:hardtime_allow_different_key = 1
