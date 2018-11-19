@@ -55,6 +55,7 @@ Plug 'vim-erlang/vim-erlang-omnicomplete'
 Plug 'vim-erlang/vim-erlang-skeletons'
 Plug 'elixir-editors/vim-elixir'
 Plug 'ambv/black'
+Plug 'mhinz/vim-mix-format'
 " Misc
 Plug 'vim-scripts/scratch.vim'
 Plug 'mrtazz/simplenote.vim'
@@ -260,6 +261,10 @@ let g:go_fmt_command = "goimports"
 " endif
 " let g:neocomplcache_force_omni_patterns.go = '\h\w*\.\?'
 
+" Mix Format
+let g:mix_format_on_save = 1
+let g:mix_format_options = '--check-equivalent'
+
 " NERDCommenter
 let NERDSpaceDelims = 1
 
@@ -310,8 +315,6 @@ else
   endif
 endif
 let g:syntastic_erlang_checkers=['syntaxerl']
-let g:syntastic_elixir_checkers=['elixir']
-let g:syntastic_enable_elixir_checker=1
 
 " HardTime - No arrows
 let g:hardtime_default_on = 1
