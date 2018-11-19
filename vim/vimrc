@@ -6,8 +6,11 @@ endif
 
 call plug#begin('~/.vim/plugged') " Required!
 " Navigation and utils
-Plug 'qpkorr/vim-bufkill'
-Plug 'ctrlpvim/ctrlp.vim'
+" Plug 'qpkorr/vim-bufkill'
+" Plug 'ctrlpvim/ctrlp.vim'
+Plug '/usr/local/opt/fzf'
+Plug 'junegunn/fzf.vim'
+
 Plug 'majutsushi/tagbar'
 Plug 'tpope/vim-vinegar'
 Plug 'sjl/vitality.vim'
@@ -21,8 +24,8 @@ Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-repeat'
 " Code completion and check
 " Plug 'Valloric/YouCompleteMe', { 'do': './install.sh' }
-Plug 'Shougo/neocomplcache.vim'
-Plug 'marijnh/tern_for_vim', { 'do': 'npm install' }
+" Plug 'Shougo/neocomplcache.vim'
+" Plug 'marijnh/tern_for_vim', { 'do': 'npm install' }
 Plug 'scrooloose/syntastic'
 Plug 'mtscout6/syntastic-local-eslint.vim'
 " UI
@@ -31,7 +34,7 @@ Plug 'vim-airline/vim-airline-themes'
 Plug 'iplog/vim-popsicles'
 Plug 'nathanaelkane/vim-indent-guides'
 " Syntax
-Plug 'fatih/vim-go'
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'ap/vim-css-color'
 Plug 'digitaltoad/vim-jade'
 Plug 'elzr/vim-json'
@@ -50,6 +53,7 @@ Plug 'vim-erlang/vim-erlang-runtime'
 Plug 'vim-erlang/vim-erlang-omnicomplete'
 Plug 'vim-erlang/vim-erlang-skeletons'
 Plug 'elixir-editors/vim-elixir'
+Plug 'hashivim/vim-terraform'
 " Misc
 Plug 'vim-scripts/scratch.vim'
 Plug 'mrtazz/simplenote.vim'
@@ -167,13 +171,19 @@ endif
 
 " File type specifics
 " All Trim trailing whitespace when saving a document
-autocmd BufWritePre *\(.md\)\@<! :%s/\s\+$//e
+autocmd BufWritePre *\(.md\|.diff\)\@<! :%s/\s\+$//e
 " Less
 autocmd BufEnter *.less set filetype=less
 " Handlebars
 autocmd BufEnter *.hjs set filetype=handlebars
 " Git
 autocmd Filetype gitcommit setlocal spell textwidth=72
+
+augroup markdownSpell
+  autocmd!
+  autocmd FileType markdown setlocal spell
+  autocmd BufRead,BufNewFile *.md setlocal spell
+augroup END
 
 " Custom commands
 " System
@@ -205,20 +215,23 @@ let g:airline_theme = 'base16'
 set noshowmode
 
 " Ctrlp
-nmap <Leader>t :CtrlP<CR>
-nmap <Leader>o :CtrlPBuffer<CR>
-nmap <Leader>T :CtrlPClearCache<CR>:CtrlP<CR>
-let g:ctrlp_match_window = 'results:20'
-let g:ctrlp_bufname_mod = ':~:.:p'
-let g:ctrlp_bufpath_mod = ''
+" nmap <Leader>t :CtrlP<CR>
+" nmap <Leader>o :CtrlPBuffer<CR>
+" nmap <Leader>T :CtrlPClearCache<CR>:CtrlP<CR>
+" let g:ctrlp_match_window = 'results:20'
+" let g:ctrlp_bufname_mod = ':~:.:p'
+" let g:ctrlp_bufpath_mod = ''
 
-if executable('ag')
-  " http://robots.thoughtbot.com/faster-grepping-in-vim
-  " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
-  let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-  " ag is fast enough that CtrlP doesn't need to cache
-  let g:ctrlp_use_caching = 0
-endif
+" if executable('ag')
+  " " http://robots.thoughtbot.com/faster-grepping-in-vim
+  " " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
+  " let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+  " " ag is fast enough that CtrlP doesn't need to cache
+  " let g:ctrlp_use_caching = 0
+" endif
+nmap <leader>t :Files<CR>
+nmap <Leader>o :Buffers<CR>
+nmap <Leader>T :History<CR>
 
 " IndentGuides
 let indent_guides_enable_on_vim_startup = 1
@@ -231,17 +244,17 @@ endif
 " format with goimports instead of gofmt
 let g:go_fmt_command = "goimports"
 
-" neocomplcache
-let g:neocomplcache_enable_at_startup = 1  " Use neocomplcache.
-let g:acp_enableAtStartup = 0  " Disable AutoComplPop.
-autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-if !exists('g:neocomplcache_force_omni_patterns')
-  let g:neocomplcache_force_omni_patterns = {}
-endif
-let g:neocomplcache_force_omni_patterns.go = '\h\w*\.\?'
+" " neocomplcache
+" let g:neocomplcache_enable_at_startup = 1  " Use neocomplcache.
+" let g:acp_enableAtStartup = 0  " Disable AutoComplPop.
+" autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
+" autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
+" autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
+" autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
+" if !exists('g:neocomplcache_force_omni_patterns')
+  " let g:neocomplcache_force_omni_patterns = {}
+" endif
+" let g:neocomplcache_force_omni_patterns.go = '\h\w*\.\?'
 
 " NERDCommenter
 let NERDSpaceDelims = 1
@@ -256,7 +269,7 @@ nmap <Leader>d :Sscratch<CR>:q<CR>:b __Scratch__<CR>
 nmap <Leader>D :b __Scratch__<CR>:b#<CR>
 
 " Simplenote
-if filereadable('~/.simplenoterc')
+if filereadable(expand('~/.simplenoterc'))
   source ~/.simplenoterc
 endif
 let g:SimplenoteNoteFiletype = 'markdown'
@@ -266,7 +279,7 @@ let g:SimplenoteVertical = 1
 let g:syntastic_check_on_open = 1
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_aggregate_errors = 1
-if filereadable('.eslintrc')
+if filereadable('.eslintrc') || filereadable('.eslintrc.yaml') || filereadable('.eslintrc.yml') || filereadable('.eslintrc.js')
   let g:syntastic_javascript_checkers = ['eslint']
 else
   let g:syntastic_javascript_checkers = ['jshint']
@@ -292,3 +305,11 @@ if has("autocmd")
   autocmd bufwritepost .vimrc source ~/.vimrc
  augroup END
 endif
+
+autocmd BufRead,BufNewFile /Users/nico.blanchot/local/dev/common-web-dazn/**/*.js setlocal expandtab tabstop=4 shiftwidth=4 softtabstop=4
+autocmd BufRead,BufNewFile /Users/nico.blanchot/local/dev/common-web-dazn/**/*.html setlocal expandtab tabstop=4 shiftwidth=4 softtabstop=4
+autocmd BufRead,BufNewFile /Users/nico.blanchot/local/dev/common-web-dazn/**/*.css setlocal expandtab tabstop=4 shiftwidth=4 softtabstop=4
+
+" Prettier
+autocmd FileType javascript set formatprg=npx\ eslint\ --fix-dry-run\ --parser\ babylon\ --stdin
+nnoremap <Leader>gq :normal gggqG<CR>

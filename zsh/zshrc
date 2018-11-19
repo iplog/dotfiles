@@ -75,3 +75,10 @@ files=( $(find -f ~/.env/*.zsh) )
 for file in $files; do;
   source $file
 done
+
+. $HOME/.asdf/asdf.sh
+
+. $HOME/.asdf/completions/asdf.bash
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+export FZF_DEFAULT_COMMAND='ag -g ""'
