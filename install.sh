@@ -24,12 +24,12 @@ sed -e s/{{firstName}}/${firstName}/ \
 -e s/{{lastName}}/${lastName}/ \
 -e s/{{email}}/${email}/ git/gitconfig.sample > git/gitconfig
 
-# install oh-my-zsh
+# Install oh-my-zsh
 if [ ! -r ~/.oh-my-zsh ]; then
   curl -L https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sh
 fi
 
-# create arrays
+# List of files that need to be symlinked
 declare -a confFiles=(
   git/gitconfig
   zsh/zshrc
@@ -41,6 +41,7 @@ declare -a confFiles=(
   bash/bash_profile
 )
 
+# List of matching destinations
 declare -a dests=(
   ~/.gitconfig
   ~/.zshrc
@@ -56,28 +57,29 @@ declare -a dests=(
 # Get current working directory
 CWD=$(pwd)
 
-# create all the files
+# Create all the symlinks
 for i in ${!confFiles[@]}; do
   confFile=${confFiles[$i]}
   dest=${dests[$i]}
 
-  # check for existing files and back them up
+  # Check for existing files and back them up
   if [ -f ${dest} ] && [ ! -f ${dest}.orig ]; then
     mv ${dest} ${dest}.orig
   elif [ -h ${dest} ]; then
     rm ${dest}
   fi
 
-  # create symlink
+  # Create symlink
   ln -s ${CWD}/${confFile} ${dest}
 
   echo "${dest} installed!"
 done
 
-# create custom env folder for zsh
+# Create custom env folder for zsh
 mkdir ~/.env
 
-# install vim
+# Install vim
 sh vim/install.sh
+echo "Vim has been installed"
 
 echo "Installation: Done!"
