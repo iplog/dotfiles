@@ -18,6 +18,9 @@ Installation has been made easy. Just run :)
     $ cd ~/.dotfiles
     $ ./brew_install.sh
     $ ./install.sh
+    $ ./vim/install.sh
+    $ ./asdf/install.sh
+    $ ./extra_gui_tools_install.sh
 
 You will be asked for some details in order to generate a custom version of the
 .gitconfig file.
@@ -34,14 +37,11 @@ If you only want to install vim:
 
     $ ./install.sh
 
-`vim/install.sh` should be run form the root folder (not form the `vim`
-folder).
+Please note that `vim/install.sh` should always be run form the root folder 
+(not form the `vim` folder).
 
-## Install Homebrew formulae
-
-When setting up a new Mac, you may want to install some common Homebrew formulae (after installing [Homebrew](http://brew.sh/), of course):
-
-    $ brew bundle ~/.dotfiles/Brewfile
+    $ cd ~/.dotfiles
+    $ ./vim/install.sh
 
 ## To do
 
