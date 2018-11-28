@@ -20,7 +20,6 @@ install vim
 install tmux
 
 # Install other useful binaries
-install ack
 install git
 install hub
 install node # This installs `npm` too using the recommended installation method

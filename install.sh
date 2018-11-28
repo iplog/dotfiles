@@ -37,7 +37,6 @@ declare -a confFiles=(
   ssh/config
   vim/vimrc
   vim/gvimrc
-  ack/ackrc
   tmux/tmux.conf
   bash/bash_profile
 )
