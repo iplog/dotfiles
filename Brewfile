@@ -1,29 +1,41 @@
-# Install command-line tools using Homebrew
-# Usage: `brew bundle Brewfile`
+tap "homebrew/bundle"
+tap "homebrew/cask"
+tap "homebrew/core"
 
-# Make sure we’re using the latest Homebrew
-update
+# Common stuf
+brew "bash"
+brew "fzf"
+brew "git"
+brew "httpie"
+brew "hub"
+brew "reattach-to-user-namespace"
+brew "the_silver_searcher"
+brew "tmux"
+brew "vim"
+brew "zsh"
 
-# Upgrade any already-installed formulae
-upgrade
+# asdf specific
+brew "automake"
+brew "coreutils"
+brew "gnupg"
+brew "pkg-config"
+brew "libtool"
+brew "libxslt"
+brew "unixodbc"
+brew "wxmac"
 
-# Install Bash 4
-# Note: don’t forget to add `/usr/local/bin/bash` to `/etc/shells` before running `chsh`.
-install bash
-install bash-completion
-
-# Install how my zsh
-install zsh
-
-# Install more recent versions of some OS X tools and cool tools
-install vim
-install tmux
-
-# Install other useful binaries
-install git
-install hub
-install node # This installs `npm` too using the recommended installation method
-install mercurial
-
-# Remove outdated versions from the cellar
-cleanup
+# casks
+cask "atom"
+cask "cyberduck"
+cask "dash"
+cask "dashlane"
+cask "docker"
+cask "google-chrome"
+cask "iterm2"
+cask "java" unless system "/usr/libexec/java_home --failfast"
+cask "karabiner-elements"
+cask "macvim"
+cask "onyx"
+cask "simplenote"
+cask "slack"
+cask "spotify"
