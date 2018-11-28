@@ -7,10 +7,12 @@ while true; do
   read -p "First name (git): " firstName
   read -p "Last name (git): " lastName
   read -p "Email (git): " email
+  read -p "Work Environment (e.g. home): " workEnv
   echo "Thanks!\n"
   echo "First name: ${firstName}"
   echo "Last name: ${lastName}"
-  echo "Email: ${email}\n"
+  echo "Email: ${email}"
+  echo -e "Work Environment: ${workEnv}"
   read -p "Are the details ok? y/n " yn
     case $yn in
       [Yy]* ) break;;
@@ -77,6 +79,8 @@ done
 
 # Create custom env folder for zsh
 mkdir ~/.env
+touch ~/.env/${workEnv}.zsh
+echo "~/.env/${workEnv}.zsh has been created"
 
 # Install vim
 sh vim/install.sh
