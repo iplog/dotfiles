@@ -16,6 +16,7 @@ Installation has been made easy. Just run :)
 
     $ git clone git@github.com:iplog/dotfiles ~/.dotfiles
     $ cd ~/.dotfiles
+    $ ./brew_install.sh
     $ ./install.sh
 
 You will be asked for some details in order to generate a custom version of the
