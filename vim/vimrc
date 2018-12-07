@@ -56,6 +56,10 @@ Plug 'vim-erlang/vim-erlang-skeletons'
 Plug 'elixir-editors/vim-elixir'
 Plug 'ambv/black'
 Plug 'mhinz/vim-mix-format'
+Plug 'flowtype/vim-flow', {
+  \ 'autoload': {
+  \   'filetypes': 'javascript'
+  \ }}
 " Misc
 Plug 'vim-scripts/scratch.vim'
 Plug 'mrtazz/simplenote.vim'
@@ -238,6 +242,14 @@ nmap <leader>t :Files<CR>
 nmap <Leader>o :Buffers<CR>
 nmap <Leader>T :History<CR>
 
+" Flow
+"Use locally installed flow
+if filereadable('.flowconfig')
+  let g:flow#autoclose = 1
+  let g:flow#flowpath = "./node_modules/.bin/flow"
+  let g:javascript_plugin_flow = 1
+endif
+
 " IndentGuides
 let indent_guides_enable_on_vim_startup = 1
 if !has("gui_running")
@@ -308,6 +320,7 @@ let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_aggregate_errors = 1
 if filereadable('.eslintrc') || filereadable('.eslintrc.yaml') || filereadable('.eslintrc.yml') || filereadable('.eslintrc.js')
   let g:syntastic_javascript_checkers = ['eslint']
+  let g:syntastic_javascript_eslint_args = ['--fix']
 else
   let g:syntastic_javascript_checkers = ['jshint']
   if filereadable('.jscsrc')
@@ -336,5 +349,6 @@ autocmd BufRead,BufNewFile /Users/nico.blanchot/local/dev/common-web-dazn/**/*.h
 autocmd BufRead,BufNewFile /Users/nico.blanchot/local/dev/common-web-dazn/**/*.css setlocal expandtab tabstop=4 shiftwidth=4 softtabstop=4
 
 " Prettier
-autocmd FileType javascript set formatprg=npx\ eslint\ --fix-dry-run\ --parser\ babylon\ --stdin
-nnoremap <Leader>gq :normal gggqG<CR>
+" autocmd FileType javascript set formatprg=npx\ prettier\ --stdin\ --stdin-filepath\ %
+" nnoremap <Leader>gq :normal gggqG<CR>
+" nnoremap <leader>gp :silent %!prettier --stdin --stdin-filepath % --trailing-comma all --single-quote<CR>
