@@ -186,7 +186,7 @@ autocmd BufEnter *.hjs set filetype=handlebars
 autocmd Filetype gitcommit setlocal spell textwidth=72
 " Python
 autocmd BufWritePost *.py execute ':Black'
-let g:black_linelength = 79
+let g:black_linelength = 88
 
 augroup markdownSpell
   autocmd!
