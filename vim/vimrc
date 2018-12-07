@@ -338,15 +338,11 @@ let g:list_of_normal_keys = ["h", "j", "k", "l", "+", "<UP>", "<DOWN>", "<LEFT>"
 
 " Source the vimrc file after saving it. This way, you don't have to reload Vim to see the changes.
 if has("autocmd")
- augroup myvimrchooks
-  au!
-  autocmd bufwritepost .vimrc source ~/.vimrc
- augroup END
+  augroup myvimrchooks
+    au!
+    autocmd bufwritepost .vimrc source ~/.vimrc
+  augroup END
 endif
-
-autocmd BufRead,BufNewFile /Users/nico.blanchot/local/dev/common-web-dazn/**/*.js setlocal expandtab tabstop=4 shiftwidth=4 softtabstop=4
-autocmd BufRead,BufNewFile /Users/nico.blanchot/local/dev/common-web-dazn/**/*.html setlocal expandtab tabstop=4 shiftwidth=4 softtabstop=4
-autocmd BufRead,BufNewFile /Users/nico.blanchot/local/dev/common-web-dazn/**/*.css setlocal expandtab tabstop=4 shiftwidth=4 softtabstop=4
 
 " Prettier
 " autocmd FileType javascript set formatprg=npx\ prettier\ --stdin\ --stdin-filepath\ %
