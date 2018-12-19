@@ -21,10 +21,20 @@ while true; do
     esac
 done
 
+# Get current working directory
+CWD=$(pwd)
+
 # Create git conf file
 sed -e s/{{firstName}}/${firstName}/ \
 -e s/{{lastName}}/${lastName}/ \
--e s/{{email}}/${email}/ git/gitconfig.sample > git/gitconfig
+-e s/{{email}}/${email}/ git/gitconfig.tmpl > git/gitconfig
+
+# Create ctags conf file
+sed -e s#{{cwd}}#"${CWD}"# ctags/ctags.tmpl > ctags/ctags
+
+# Install some ctags dependencies
+git clone https://github.com/romainl/ctags-patterns-for-javascript.git ctags/deps/ctags-partterns-for-javascript
+git clone https://github.com/mmorearty/elixir-ctags.git ctags/deps/elixir-ctags
 
 # Install oh-my-zsh
 if [ ! -r ~/.oh-my-zsh ]; then
@@ -41,6 +51,7 @@ declare -a confFiles=(
   vim/gvimrc
   tmux/tmux.conf
   bash/bash_profile
+  ctags/ctags
 )
 
 # List of matching destinations
@@ -54,10 +65,8 @@ declare -a dests=(
   ~/.ackrc
   ~/.tmux.conf
   ~/.bash_profile
+  ~/.ctags
 )
-
-# Get current working directory
-CWD=$(pwd)
 
 # Create all the symlinks
 for i in ${!confFiles[@]}; do

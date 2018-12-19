@@ -1,0 +1,18 @@
+--fields=+l
+
+--options={{cwd}}/ctags/deps/ctags-patterns-for-javascript/.ctags
+--options={{cwd}}/ctags/deps/elixir-ctags/.ctags
+
+--python-kinds=-iv
+
+--regex-make=/^([^# \t]*):/\1/t,target/
+
+--langdef=markdown
+--langmap=markdown:.mkd.md
+--regex-markdown=/^#[ \t]+(.*)/\1/h,Heading_L1/
+--regex-markdown=/^##[ \t]+(.*)/\1/i,Heading_L2/
+--regex-markdown=/^###[ \t]+(.*)/\1/k,Heading_L3/
+
+--exclude=dump
+--exclude=dump_json
+--exclude=tmp

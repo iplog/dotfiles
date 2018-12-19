@@ -303,6 +303,40 @@ let g:tagbar_type_elixir = {
     \ ]
 \ }
 
+let g:tagbar_type_javascript = {
+    \ 'ctagstype' : 'javascript',
+    \ 'kinds' : [
+        \ 'T:tags',
+        \ 'A:arrays',
+        \ 'O:objects',
+        \ 'P:properties',
+        \ 'G:generators',
+        \ 'F:functions',
+        \ 'C:classes',
+        \ 'M:methods',
+        \ 'V:variables',
+        \ 'I:imports',
+        \ 'E:exports',
+        \ 'S:styled_components',
+    \ ]
+\ }
+
+let g:tagbar_type_make = {
+    \ 'kinds':[
+        \ 'm:macros',
+        \ 't:targets'
+    \ ]
+\ }
+
+let g:tagbar_type_markdown = {
+    \ 'ctagstype' : 'markdown',
+    \ 'kinds' : [
+        \ 'h:Heading_L1',
+        \ 'i:Heading_L2',
+        \ 'k:Heading_L3'
+    \ ]
+\ }
+
 " Scratch
 nmap <Leader>d :Sscratch<CR>:q<CR>:b __Scratch__<CR>
 nmap <Leader>D :b __Scratch__<CR>:b#<CR>

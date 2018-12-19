@@ -20,3 +20,9 @@
 # Compiled files
 ###
 git/gitconfig
+ctags/ctags
+
+###
+# Deps folders
+###
+ctags/deps/
