@@ -30,10 +30,11 @@ sed -e s/{{firstName}}/${firstName}/ \
 -e s/{{email}}/${email}/ git/gitconfig.tmpl > git/gitconfig
 
 # Create ctags conf file
-sed -e s#{{cwd}}#"${CWD}"# ctags/ctags.tmpl > ctags/ctags
+mkdir ctags/ctags.d
+sed -e s#{{cwd}}#"${CWD}"# ctags/main.ctags.tmpl > ctags/ctags.d/main.ctags
 
 # Install some ctags dependencies
-git clone https://github.com/romainl/ctags-patterns-for-javascript.git ctags/deps/ctags-partterns-for-javascript
+git clone https://github.com/agorf/ctags-patterns-for-javascript ctags/deps/ctags-patterns-for-javascript
 git clone https://github.com/mmorearty/elixir-ctags.git ctags/deps/elixir-ctags
 
 # Install oh-my-zsh
@@ -51,7 +52,7 @@ declare -a confFiles=(
   vim/gvimrc
   tmux/tmux.conf
   bash/bash_profile
-  ctags/ctags
+  ctags/ctags.d
 )
 
 # List of matching destinations
@@ -65,7 +66,7 @@ declare -a dests=(
   ~/.ackrc
   ~/.tmux.conf
   ~/.bash_profile
-  ~/.ctags
+  ~/.ctags.d
 )
 
 # Create all the symlinks

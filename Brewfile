@@ -1,6 +1,7 @@
 tap "homebrew/bundle"
 tap "homebrew/cask"
 tap "homebrew/core"
+tap "universal-ctags/universal-ctags"
 
 # Common stuf
 brew "bash"
