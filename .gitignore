@@ -26,3 +26,8 @@ ctags/ctags.d/main.ctags
 # Deps folders
 ###
 ctags/deps/
+
+###
+# Misc
+###
+tmp
