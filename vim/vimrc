@@ -53,15 +53,14 @@ Plug 'vim-erlang/vim-erlang-runtime'
 Plug 'vim-erlang/vim-erlang-omnicomplete'
 Plug 'vim-erlang/vim-erlang-skeletons'
 Plug 'elixir-editors/vim-elixir'
-Plug 'ambv/black'
 Plug 'mhinz/vim-mix-format'
+Plug 'ambv/black'
 Plug 'flowtype/vim-flow', {
   \ 'autoload': {
   \   'filetypes': 'javascript'
   \ }}
 " Language tools
 Plug 'godlygeek/tabular'
-Plug 'plasticboy/vim-markdown'
 " Misc
 Plug 'vim-scripts/scratch.vim'
 Plug 'mrtazz/simplenote.vim'
@@ -196,6 +195,8 @@ augroup markdownSpell
   autocmd FileType markdown setlocal spell
   autocmd BufRead,BufNewFile *.md setlocal spell
 augroup END
+
+let g:markdown_folding = 1
 
 " Custom commands
 " System
