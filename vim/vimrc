@@ -398,6 +398,7 @@ endif
 
 " add an autocmd after vim started to execute checktime for *.js files on write
 " au VimEnter *.js au BufWritePost *.js checktime
+
 function! SyntasticCheckHook(errors)
   checktime
 endfunction
