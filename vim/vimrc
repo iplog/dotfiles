@@ -59,11 +59,11 @@ Plug 'flowtype/vim-flow', {
   \ 'autoload': {
   \   'filetypes': 'javascript'
   \ }}
+Plug 'hashivim/vim-terraform'
 " Language tools
 Plug 'godlygeek/tabular'
-Plug 'plasticboy/vim-markdown'
 " Misc
-Plug 'vim-scripts/scratch.vim'
+Plug 'mtth/scratch.vim'
 Plug 'mrtazz/simplenote.vim'
 Plug 'takac/vim-hardtime'
 Plug 'rizzatti/dash.vim'
@@ -276,6 +276,9 @@ let g:go_fmt_command = "goimports"
 " endif
 " let g:neocomplcache_force_omni_patterns.go = '\h\w*\.\?'
 
+" Markdown
+
+
 " Mix Format
 let g:mix_format_on_save = 1
 let g:mix_format_options = '--check-equivalent'
@@ -351,8 +354,16 @@ let g:tagbar_type_markdown = {
 \ }
 
 " Scratch
-nmap <Leader>d :Sscratch<CR>:q<CR>:b __Scratch__<CR>
-nmap <Leader>D :b __Scratch__<CR>:b#<CR>
+let g:scratch_height = 88
+let g:scratch_insert_autohide = 0
+let g:scratch_autohide = 0
+let g:scratch_top = 1
+let g:scratch_persistence_file = '/tmp/scratch.vim'
+let g:scratch_vertical = 1
+let g:scratch_horizontal = 0
+
+nmap <Leader>d :Scratch<CR>
+nmap <Leader>D :b __Scratch__<CR>:q<CR>
 
 " Simplenote
 if filereadable(expand('~/.simplenoterc'))
@@ -375,6 +386,19 @@ else
   endif
 endif
 let g:syntastic_erlang_checkers=['syntaxerl']
+let g:syntastic_python_checkers = ['mypy', 'python', 'flake8']
+
+if filereadable('.stylelintrc')
+  let g:syntastic_css_checkers = ['stylelint']
+  let g:syntastic_css_stylelint_args = ['--fix']
+  let g:syntastic_css_stylelint_exec = './node_modules/.bin/stylelint'
+endif
+
+" add an autocmd after vim started to execute checktime for *.js files on write
+" au VimEnter *.js au BufWritePost *.js checktime
+function! SyntasticCheckHook(errors)
+  checktime
+endfunction
 
 " HardTime - No arrows
 let g:hardtime_default_on = 1
@@ -395,3 +419,4 @@ endif
 " autocmd FileType javascript set formatprg=npx\ prettier\ --stdin\ --stdin-filepath\ %
 " nnoremap <Leader>gq :normal gggqG<CR>
 " nnoremap <leader>gp :silent %!prettier --stdin --stdin-filepath % --trailing-comma all --single-quote<CR>
+
