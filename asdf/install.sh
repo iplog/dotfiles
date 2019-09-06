@@ -1,9 +1,9 @@
 #! /usr/bin/env bash
 
-git clone https://github.com/asdf-vm/asdf.git ~/.asdf --branch v0.6.2
-
-echo -e '\n. $HOME/.asdf/asdf.sh' >> ~/.zshrc
-echo -e '\n. $HOME/.asdf/completions/asdf.bash' >> ~/.zshrc
+# The 2 lines below are not necessary as they have already been saved to the
+# `zsh/zshrc` file.
+# echo -e '\n. $HOME/.asdf/asdf.sh' >> ~/.zshrc
+# echo -e '\n. $HOME/.asdf/completions/asdf.bash' >> ~/.zshrc
 
 asdf plugin-add erlang
 asdf plugin-add elixir

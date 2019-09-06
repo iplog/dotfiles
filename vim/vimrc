@@ -360,12 +360,12 @@ let g:scratch_height = 88
 let g:scratch_insert_autohide = 0
 let g:scratch_autohide = 0
 let g:scratch_top = 1
-let g:scratch_persistence_file = '/tmp/scratch.vim'
+let g:scratch_persistence_file = './tmp/scratch.vim'
 let g:scratch_vertical = 1
 let g:scratch_horizontal = 0
 
 nmap <Leader>d :Scratch<CR>
-nmap <Leader>D :b __Scratch__<CR>:q<CR>
+nmap <Leader>D :Scratch<CR>:q<CR>
 
 " Simplenote
 if filereadable(expand('~/.simplenoterc'))
@@ -389,7 +389,7 @@ else
 endif
 
 let g:syntastic_erlang_checkers = ['syntaxerl']
-let g:syntastic_python_checkers = ['mypy', 'python', 'flake8']
+let g:syntastic_python_checkers = ['python', 'flake8', 'mypy']
 
 if filereadable('.stylelintrc')
   let g:syntastic_css_checkers = ['stylelint']

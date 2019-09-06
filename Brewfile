@@ -29,23 +29,8 @@ brew "universal-ctags/universal-ctags/universal-ctags", args: ["HEAD"]
 brew "vim"
 # UNIX shell (command interpreter)
 brew "zsh"
-
-## asdf specific
-# Tool for generating GNU Standards-compliant Makefiles
-brew "automake"
-brew "coreutils"
-# GNU Pretty Good Privacy (PGP) package
-brew "gnupg"
-# Manage compile and link flags for libraries
-brew "pkg-config"
-# Generic library support script
-brew "libtool"
-# C XSLT library for GNOME
-brew "libxslt"
-# ODBC 3 connectivity for UNIX
-brew "unixodbc"
-# Cross-platform C++ GUI toolkit (wxWidgets for macOS)
-brew "wxmac"
+# ASDF platform version manager
+brew "asdf"
 
 ## casks
 cask "atom"
