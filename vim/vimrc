@@ -55,11 +55,13 @@ Plug 'vim-erlang/vim-erlang-skeletons'
 Plug 'elixir-editors/vim-elixir'
 Plug 'mhinz/vim-mix-format'
 Plug 'ambv/black'
-Plug 'flowtype/vim-flow', {
-  \ 'autoload': {
-  \   'filetypes': 'javascript'
-  \ }}
+" Plug 'flowtype/vim-flow', {
+"   \ 'autoload': {
+"   \   'filetypes': 'javascript'
+"   \ }}
 Plug 'hashivim/vim-terraform'
+Plug 'leafgarland/typescript-vim'
+Plug 'ianks/vim-tsx'
 " Language tools
 Plug 'godlygeek/tabular'
 " Misc
