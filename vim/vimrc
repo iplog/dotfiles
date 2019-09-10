@@ -26,8 +26,9 @@ Plug 'tpope/vim-repeat'
 " Plug 'Valloric/YouCompleteMe', { 'do': './install.sh' }
 " Plug 'Shougo/neocomplcache.vim'
 " Plug 'marijnh/tern_for_vim', { 'do': 'npm install' }
-Plug 'scrooloose/syntastic'
-Plug 'mtscout6/syntastic-local-eslint.vim'
+" Plug 'scrooloose/syntastic'
+" Plug 'mtscout6/syntastic-local-eslint.vim'
+Plug 'dense-analysis/ale'
 Plug 'tpope/vim-projectionist'
 " UI
 Plug 'vim-airline/vim-airline'
@@ -226,7 +227,8 @@ endif
 let g:airline_left_sep = ''
 let g:airline_right_sep = ''
 let g:airline#extensions#csv#enabled = 0
-let g:airline#extensions#syntastic#enabled = 0
+" let g:airline#extensions#syntastic#enabled = 0
+" let g:airline#extensions#ale = 0
 let g:airline_theme = 'base16'
 set noshowmode
 
@@ -376,32 +378,15 @@ endif
 let g:SimplenoteNoteFiletype = 'markdown'
 let g:SimplenoteVertical = 1
 
-" Syntastic
-let g:syntastic_check_on_open = 1
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_aggregate_errors = 1
-if filereadable('.eslintrc') || filereadable('.eslintrc.yaml') || filereadable('.eslintrc.yml') || filereadable('.eslintrc.js')
-  let g:syntastic_javascript_checkers = ['eslint']
-  let g:syntastic_javascript_eslint_args = ['--fix']
-else
-  let g:syntastic_javascript_checkers = ['jshint']
-  if filereadable('.jscsrc')
-    let g:syntastic_javascript_checkers += ['jscs']
-  endif
-endif
-
-let g:syntastic_erlang_checkers = ['syntaxerl']
-let g:syntastic_python_checkers = ['python', 'flake8', 'mypy']
-
-if filereadable('.stylelintrc')
-  let g:syntastic_css_checkers = ['stylelint']
-  let g:syntastic_css_stylelint_args = ['--fix']
-  let g:syntastic_css_stylelint_exec = './node_modules/.bin/stylelint'
-endif
-
-function! SyntasticCheckHook(errors)
-  checktime
-endfunction
+" Ale
+" let g:ale_echo_msg_format = "[%linter%] %severity% - %s"
+let g:ale_linters = {
+    \ 'typescript': ['eslint', 'tsserver']
+\ }
+let g:ale_fixers = {
+    \ 'typescript': ['prettier']
+\ }
+let g:ale_fix_on_save = 1
 
 " HardTime - No arrows
 let g:hardtime_default_on = 1
@@ -423,6 +408,4 @@ endif
 " nnoremap <Leader>gq :normal gggqG<CR>
 " nnoremap <leader>gp :silent %!prettier --stdin --stdin-filepath % --trailing-comma all --single-quote<CR>
 
-if filereadable(".git/safe/../../.vimrc.local")
-  source .git/safe/../../.vimrc.local
-endif
+" let g:ale_python_auto_pipenv = 1
