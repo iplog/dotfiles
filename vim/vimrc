@@ -423,3 +423,6 @@ endif
 " nnoremap <Leader>gq :normal gggqG<CR>
 " nnoremap <leader>gp :silent %!prettier --stdin --stdin-filepath % --trailing-comma all --single-quote<CR>
 
+if filereadable(".git/safe/../../.vimrc.local")
+  source .git/safe/../../.vimrc.local
+endif
