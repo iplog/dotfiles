@@ -63,7 +63,6 @@ declare -a dests=(
   ~/.ssh/config
   ~/.vimrc
   ~/.gvimrc
-  ~/.ackrc
   ~/.tmux.conf
   ~/.bash_profile
   ~/.ctags.d
