@@ -1,12 +1,12 @@
 --fields=+l
 
---options={{cwd}}/ctags/deps/ctags-patterns-for-javascript/.ctags
+--options=/Users/nico/.dotfiles/ctags/deps/ctags-patterns-for-javascript/.ctags
 
 --python-kinds=-iv
 
 --regex-make=/^([^# \t]*):/\1/t,target/
 
---exclude=dump
 --exclude=.mypy_cache
+--exclude=dump
 --exclude=dump_json
 --exclude=tmp

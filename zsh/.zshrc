@@ -51,6 +51,8 @@ export PATH=/usr/local/sbin:$PATH
 
 # node
 export PATH=~/node_modules/.bin:$PATH
+
+# personal scripts
 export PATH=~/local/bin:$PATH
 
 ## Vi mode tweaks
@@ -75,10 +77,3 @@ files=( $(find -f ~/.env/*.zsh) )
 for file in $files; do;
   source $file
 done
-
-. $HOME/.asdf/asdf.sh
-
-. $HOME/.asdf/completions/asdf.bash
-
-[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-export FZF_DEFAULT_COMMAND='ag -g ""'

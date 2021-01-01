@@ -7,13 +7,13 @@ endif
 call plug#begin('~/.vim/plugged') " Required!
 " Navigation and utils
 " Plug 'qpkorr/vim-bufkill'
-" Plug 'ctrlpvim/ctrlp.vim'
-Plug '/usr/local/opt/fzf'
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-
 Plug 'majutsushi/tagbar'
 Plug 'tpope/vim-vinegar'
 Plug 'sjl/vitality.vim'
+Plug 'tpope/vim-projectionist'
+
 " Edition
 Plug 'mattn/emmet-vim'
 Plug 'scrooloose/nerdcommenter'
@@ -22,45 +22,32 @@ Plug 'tpope/vim-sensible'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-abolish'
 Plug 'tpope/vim-repeat'
+Plug 'godlygeek/tabular'
+
 " Code completion and check
-" Plug 'Valloric/YouCompleteMe', { 'do': './install.sh' }
-" Plug 'Shougo/neocomplcache.vim'
-" Plug 'marijnh/tern_for_vim', { 'do': 'npm install' }
-Plug 'scrooloose/syntastic'
-Plug 'mtscout6/syntastic-local-eslint.vim'
-Plug 'tpope/vim-projectionist'
+Plug 'dense-analysis/ale'
+Plug 'neoclide/coc.nvim', {'branch': 'release'} " LSP client
+
 " UI
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'iplog/vim-popsicles'
 Plug 'nathanaelkane/vim-indent-guides'
+
 " Syntax
-Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+Plug 'sheerun/vim-polyglot'
+" Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'ap/vim-css-color'
-Plug 'digitaltoad/vim-jade'
 Plug 'elzr/vim-json'
-Plug 'groenewege/vim-less'
-Plug 'heavenshell/vim-jsdoc'
-Plug 'kchmck/vim-coffee-script'
-Plug 'nono/vim-handlebars'
-Plug 'othree/html5.vim'
-Plug 'pangloss/vim-javascript'
-Plug 'smerrill/vcl-vim-plugin'
-Plug 'wavded/vim-stylus'
-Plug 'mxw/vim-jsx'
 Plug 'vim-erlang/vim-erlang-compiler'
-Plug 'vim-erlang/vim-erlang-runtime'
+" Plug 'vim-erlang/vim-erlang-runtime'
 Plug 'vim-erlang/vim-erlang-omnicomplete'
 Plug 'vim-erlang/vim-erlang-skeletons'
-Plug 'elixir-editors/vim-elixir'
+" Plug 'elixir-editors/vim-elixir'
 Plug 'mhinz/vim-mix-format'
 Plug 'ambv/black'
-Plug 'flowtype/vim-flow', {
-  \ 'autoload': {
-  \   'filetypes': 'javascript'
-  \ }}
-" Language tools
-Plug 'godlygeek/tabular'
+" Plug 'hashivim/vim-terraform'
+
 " Misc
 Plug 'vim-scripts/scratch.vim'
 Plug 'mrtazz/simplenote.vim'
@@ -97,6 +84,7 @@ set ruler               " show cursor position in status bar
 set title               " show file in titlebar
 set wildmenu            " completion with menu
 set wildignore=*.o,*.obj,*.bak,*.exe,*.py[co],*.swp,*~,*.pyc,.svn,.git
+set wildignorecase      " ingore case in the wildmenu
 set laststatus=2        " use 2 lines for the status bar
 set matchtime=2         " show matching bracket for 0.2 seconds
 set showmatch           " show matching bracket (briefly jump)
@@ -119,10 +107,8 @@ set shiftwidth=2        " spaces for autoindents
 set expandtab           " turn a tabs into spaces
 set undolevels=10000             " number of forgivable mistakes
 set updatecount=100             " write swap file to disk every 100 chars
-"set complete=.,w,b,u,U,t,i,d    " do lots of scanning on tab completion
 set timeoutlen=3000
 set fileformat=unix     " file mode is unix
-"set fileformats=unix,dos    " only detect unix file format, displays that ^M with dos files
 set diffopt=filler,iwhite       " ignore all whitespace and sync
 " set autowrite       "Write the old file out when switching between files.
 
@@ -134,6 +120,16 @@ set fileencoding=utf-8
 set wrap
 set textwidth=79
 set formatoptions=qrn1
+
+" Better Side column
+" Always show the signcolumn, otherwise it would shift the text each time
+" diagnostics appear/become resolved.
+if has("patch-8.1.1564")
+  " Recently vim can merge signcolumn and number column into one
+  set signcolumn=number
+else
+  set signcolumn=yes
+endif
 
 " Enable code folding
 set foldenable
@@ -151,7 +147,7 @@ set confirm             " get a dialog when :q, :w, or :wq fails
 "set viminfo=%100,'100,/100,h,\"500,:100,n~/.vim/viminfo
 set viminfo='20,\"500   " remember copy registers after quitting in the .viminfo file -- 20 jump links, regs up to 500 lines'
 set hidden              " remember undo after quitting
-set history=50          " keep 50 lines of command history
+set history=100         " keep 100 lines of command history
 set mouse=a             " use mouse in all modes
 set mousehide           "Hide mouse when typing
 " set splitright          " the new window is created on the right
@@ -163,8 +159,17 @@ set clipboard=unnamed
 set nrformats+=alpha
 
 " Backups
+if !isdirectory($HOME."/.vim/tmp/backup")
+  call mkdir($HOME."/.vim/tmp/backup", "p")
+endif
 set backupdir=~/.vim/tmp/backup// " backups
-set directory=~/.vim/tmp/swap// " swap files
+if !isdirectory($HOME."/.vim/tmp/swap")
+  call mkdir($HOME."/.vim/tmp/swap", "p")
+endif
+set directory=~/.vim/tmp/swap//   " swap files
+if !isdirectory($HOME."/.vim/tmp/undo")
+  call mkdir($HOME."/.vim/tmp/undo", "p")
+endif
 set undodir=~/.vim/tmp/undo// " undo files
 set backup " enable backup
 set undofile " enable undo
@@ -179,17 +184,11 @@ endif
 " File type specifics
 " All Trim trailing whitespace when saving a document
 autocmd BufWritePre *\(.md\|.diff\)\@<! :%s/\s\+$//e
-" Less
-autocmd BufEnter *.less set filetype=less
-" Handlebars
-autocmd BufEnter *.hjs set filetype=handlebars
-" Git
-autocmd Filetype gitcommit setlocal spell textwidth=72
 " Python
 autocmd BufWritePost *.py execute ':Black'
 let g:black_linelength = 88
 
-" markdown
+" Markdown
 augroup markdownSpell
   autocmd!
   autocmd FileType markdown setlocal spell
@@ -201,15 +200,9 @@ let g:markdown_folding = 1
 " Custom commands
 " System
 nmap <leader>ev :tabedit $MYVIMRC<cr>
-
-" Ag
-if executable('ag') && !exists(':Ag')
-  set grepprg=ag  " Use ag over grep
-  let g:grep_cmd_opts = '--nocolor --line-numbers --noheading'
-
-  command -nargs=+ -complete=file -bar Ag silent! grep! <args>|cwindow|redraw!
-  nmap <Leader>f :Ag<Space>
-  nmap <Leader>F :Ag '\b<C-R><C-W>\b'
+" COC
+if filereadable(expand($HOME . "/.vim/cfg/coc.vim"))
+  source $HOME/.vim/cfg/coc.vim
 endif
 
 " ctags
@@ -218,40 +211,41 @@ if executable('ctags') && !exists(':MakeTags')
   nmap <Leader>mt :MakeTags<CR>
 endif
 
-" Plugins configuration and shortcuts
-" Airline
-let g:airline_left_sep = ''
-let g:airline_right_sep = ''
-let g:airline#extensions#csv#enabled = 0
-let g:airline#extensions#syntastic#enabled = 0
-let g:airline_theme = 'base16'
-set noshowmode
-
-" Ctrlp
-" nmap <Leader>t :CtrlP<CR>
-" nmap <Leader>o :CtrlPBuffer<CR>
-" nmap <Leader>T :CtrlPClearCache<CR>:CtrlP<CR>
-" let g:ctrlp_match_window = 'results:20'
-" let g:ctrlp_bufname_mod = ':~:.:p'
-" let g:ctrlp_bufpath_mod = ''
-
-" if executable('ag')
-  " " http://robots.thoughtbot.com/faster-grepping-in-vim
-  " " Use ag in CtrlP for listing files. Lightning fast and respects .gitignore
-  " let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
-  " " ag is fast enough that CtrlP doesn't need to cache
-  " let g:ctrlp_use_caching = 0
-" endif
+" FZF
 nmap <leader>t :Files<CR>
 nmap <Leader>o :Buffers<CR>
 nmap <Leader>T :History<CR>
 
-" Flow
-"Use locally installed flow
-if filereadable('.flowconfig')
-  let g:flow#autoclose = 1
-  let g:flow#flowpath = "./node_modules/.bin/flow"
-  let g:javascript_plugin_flow = 1
+" Plugins configuration and shortcuts
+" Ale
+let g:ale_echo_msg_error_str = 'E'
+let g:ale_echo_msg_warning_str = 'W'
+let g:ale_echo_msg_format = "[%linter%] %severity% %code% - %s"
+let g:ale_linters = {
+    \ 'typescript': ['eslint', 'tsserver'],
+    \ 'typescriptreact': ['eslint', 'tsserver'],
+    \ 'sh': ['shellcheck'],
+\ }
+let g:ale_fixers = {
+    \ 'typescript': ['prettier'],
+    \ 'markdown': ['prettier'],
+\ }
+  " \ 'sh': ['shfmt'],
+
+let g:ale_fix_on_save = 1
+let g:ale_completion_enabled = 0
+
+" Airline
+let g:airline_left_sep = ''
+let g:airline_right_sep = ''
+let g:airline#extensions#csv#enabled = 0
+" let g:airline#extensions#ale = 0
+let g:airline_theme = 'base16'
+set noshowmode
+
+" COC
+if filereadable(expand($HOME . "/.vim/cfg/coc.vim"))
+  source $HOME/.vim/cfg/coc.vim
 endif
 
 " IndentGuides
@@ -265,24 +259,32 @@ endif
 " format with goimports instead of gofmt
 let g:go_fmt_command = "goimports"
 
-" " neocomplcache
-" let g:neocomplcache_enable_at_startup = 1  " Use neocomplcache.
-" let g:acp_enableAtStartup = 0  " Disable AutoComplPop.
-" autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-" autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-" autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-" autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-" if !exists('g:neocomplcache_force_omni_patterns')
-  " let g:neocomplcache_force_omni_patterns = {}
-" endif
-" let g:neocomplcache_force_omni_patterns.go = '\h\w*\.\?'
-
 " Mix Format
 let g:mix_format_on_save = 1
 let g:mix_format_options = '--check-equivalent'
 
 " NERDCommenter
 let NERDSpaceDelims = 1
+
+" Ripgrep advanced
+if executable('rg')
+  function! RipgrepFzf(query, fullscreen)
+    let command_fmt = 'rg --column --hidden --line-number --no-heading --color=always --smart-case -- %s || true'
+    let initial_command = printf(command_fmt, shellescape(a:query))
+    let reload_command = printf(command_fmt, '{q}')
+    let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
+    call fzf#vim#grep(initial_command, 1, spec, a:fullscreen)
+  endfunction
+
+  command! -bang -nargs=* RG call RipgrepFzf(<q-args>, <bang>0)
+
+  set grepprg=rg\ -H\ --no-heading\ --vimgrep\ --smart-case\ --hidden\ --glob\ '!.git'
+  command! -nargs=+ -complete=file -bar Rg silent! grep! <args>|cwindow|redraw!
+
+  nnoremap <Leader>f :Rg<Space>
+  " grep word under cursor
+  nnoremap <Leader>F :Rg '\b<C-R><C-W>\b'
+endif
 
 " Tagbar
 nmap <Leader>r :TagbarToggle<CR>
@@ -292,47 +294,57 @@ let g:tagbar_autoclose = 1
 let g:tagbar_type_elixir = {
     \ 'ctagstype' : 'elixir',
     \ 'kinds' : [
-        \ 'f:functions',
-        \ 'functions:functions',
-        \ 'c:callbacks',
-        \ 'd:delegates',
-        \ 'e:exceptions',
-        \ 'i:implementations',
-        \ 'a:macros',
-        \ 'o:operators',
-        \ 'm:modules',
         \ 'p:protocols',
-        \ 'r:records',
-        \ 't:tests'
-    \ ]
-\ }
-
-let g:tagbar_type_go = {
-    \ 'ctagstype' : 'go',
-    \ 'kinds'     : [
-        \ 'p:package',
-        \ 'i:imports:1',
-        \ 'c:constants',
-        \ 'v:variables',
-        \ 't:types',
-        \ 'n:interfaces',
-        \ 'w:fields',
-        \ 'e:embedded',
-        \ 'm:methods',
-        \ 'r:constructor',
-        \ 'f:functions'
+        \ 'm:modules',
+        \ 'e:exceptions',
+        \ 'y:types',
+        \ 'd:delegates',
+        \ 'f:functions',
+        \ 'c:callbacks',
+        \ 'a:macros',
+        \ 't:tests',
+        \ 'i:implementations',
+        \ 'o:operators',
+        \ 'r:records'
     \ ],
     \ 'sro' : '.',
     \ 'kind2scope' : {
-        \ 't' : 'ctype',
-        \ 'n' : 'ntype'
+        \ 'p' : 'protocol',
+        \ 'm' : 'module'
     \ },
     \ 'scope2kind' : {
-        \ 'ctype' : 't',
-        \ 'ntype' : 'n'
+        \ 'protocol' : 'p',
+        \ 'module' : 'm'
     \ },
-    \ 'ctagsbin'  : 'gotags',
-    \ 'ctagsargs' : '-sort -silent'
+    \ 'sort' : 0
+\ }
+
+let g:tagbar_type_go = {
+  \ 'ctagstype' : 'go',
+  \ 'kinds'     : [
+    \ 'p:package',
+    \ 'i:imports:1',
+    \ 'c:constants',
+    \ 'v:variables',
+    \ 't:types',
+    \ 'n:interfaces',
+    \ 'w:fields',
+    \ 'e:embedded',
+    \ 'm:methods',
+    \ 'r:constructor',
+    \ 'f:functions'
+  \ ],
+  \ 'sro' : '.',
+  \ 'kind2scope' : {
+    \ 't' : 'ctype',
+    \ 'n' : 'ntype'
+  \ },
+  \ 'scope2kind' : {
+    \ 'ctype' : 't',
+    \ 'ntype' : 'n'
+  \ },
+  \ 'ctagsbin'  : 'gotags',
+  \ 'ctagsargs' : '-sort -silent'
 \ }
 
 let g:tagbar_type_make = {
@@ -342,45 +354,16 @@ let g:tagbar_type_make = {
     \ ]
 \ }
 
-let g:tagbar_type_markdown = {
-    \ 'ctagstype' : 'markdown',
-    \ 'kinds' : [
-        \ 'h:Heading_L1',
-        \ 'i:Heading_L2',
-        \ 'k:Heading_L3'
-    \ ]
-\ }
-
 " Scratch
 nmap <Leader>d :Sscratch<CR>:q<CR>:b __Scratch__<CR>
 nmap <Leader>D :b __Scratch__<CR>:b#<CR>
 
 " Simplenote
-if filereadable(expand('~/.simplenoterc'))
-  source ~/.simplenoterc
+if filereadable(expand($HOME . "/.simplenoterc"))
+  source $HOME/.simplenoterc
 endif
 let g:SimplenoteNoteFiletype = 'markdown'
 let g:SimplenoteVertical = 1
-
-" Syntastic
-let g:syntastic_check_on_open = 1
-let g:syntastic_always_populate_loc_list = 1
-let g:syntastic_aggregate_errors = 1
-if filereadable('.eslintrc') || filereadable('.eslintrc.yaml') || filereadable('.eslintrc.yml') || filereadable('.eslintrc.js')
-  let g:syntastic_javascript_checkers = ['eslint']
-  let g:syntastic_javascript_eslint_args = ['--fix']
-else
-  let g:syntastic_javascript_checkers = ['jshint']
-  if filereadable('.jscsrc')
-    let g:syntastic_javascript_checkers += ['jscs']
-  endif
-endif
-let g:syntastic_erlang_checkers = ['syntaxerl']
-let g:syntastic_css_checkers = ['stylelint']
-" let g:syntastic_python_checkers += ['mypy']
-function! SyntasticCheckHook(errors)
-  checktime
-endfunction
 
 " HardTime - No arrows
 let g:hardtime_default_on = 1
@@ -396,8 +379,3 @@ if has("autocmd")
     autocmd bufwritepost .vimrc source ~/.vimrc
   augroup END
 endif
-
-" Prettier
-" autocmd FileType javascript set formatprg=npx\ prettier\ --stdin\ --stdin-filepath\ %
-" nnoremap <Leader>gq :normal gggqG<CR>
-" nnoremap <leader>gp :silent %!prettier --stdin --stdin-filepath % --trailing-comma all --single-quote<CR>

@@ -1,6 +1,6 @@
 tap "homebrew/bundle"
-tap "homebrew/cask"
 tap "homebrew/core"
+tap "homebrew/cask"
 tap "universal-ctags/universal-ctags"
 
 ## Common stuf
@@ -12,15 +12,24 @@ brew "cloc"
 brew "fzf"
 # Distributed revision control system
 brew "git"
+# ctags-compatible tag generator for Go.
+brew "gotags"
+# GPG - GNU Pretty Good Privacy (PGP) package
+brew "gpg"
 # Improved top (interactive process viewer)
 brew "htop"
 # User-friendly cURL replacement (command-line HTTP client)
 brew "httpie"
+# Git hub command line tool
 brew "hub"
+# Java...
+brew "java" unless system "/usr/libexec/java_home --failfast"
 # Reattach process (e.g., tmux) to background
 brew "reattach-to-user-namespace"
 # Code-search similar to ack
-brew "the_silver_searcher"
+brew "ripgrep"
+# Symlinks farm management
+brew "stow"
 # Terminal multiplexer
 brew "tmux"
 # Maintained ctags implementation
@@ -46,19 +55,20 @@ brew "libxslt"
 brew "unixodbc"
 # Cross-platform C++ GUI toolkit (wxWidgets for macOS)
 brew "wxmac"
+# ASDF
+brew "asdf"
 
-## casks
-cask "atom"
+## Casks
+cask "alacritty"
 cask "cyberduck"
 cask "dash"
 cask "dashlane"
 cask "docker"
 cask "google-chrome"
-cask "iterm2"
-cask "java" unless system "/usr/libexec/java_home --failfast"
 cask "karabiner-elements"
-cask "macvim"
+# cask "macvim"
 cask "onyx"
 cask "simplenote"
 cask "slack"
 cask "spotify"
+cask "rectangle"

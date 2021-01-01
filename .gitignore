@@ -19,8 +19,8 @@
 ###
 # Compiled files
 ###
-git/gitconfig
-ctags/ctags.d/main.ctags
+git/.gitconfig
+ctags/.ctags.d/main.ctags
 
 ###
 # Deps folders

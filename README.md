@@ -9,6 +9,12 @@ You can find a copy of my main dotfiles for:
 - oh-my-zsh
 - git
 - ssh
+- alacritty
+- ctags
+- local scripts
+- ripgrep
+- ssh
+- tmux
 
 ## Installation
 
@@ -16,33 +22,9 @@ Installation has been made easy. Just run :)
 
     $ git clone git@github.com:iplog/dotfiles ~/.dotfiles
     $ cd ~/.dotfiles
-    $ ./brew_install.sh
-    $ ./install.sh
-    $ ./vim/install.sh
-    $ ./asdf/install.sh
-    $ ./extra_gui_tools_install.sh
+    $ ./install.sh init
 
 You will be asked for some details in order to generate a custom version of the
-.gitconfig file.
+`.gitconfig` file.
 
-All your existing configuration files will be backuped with `.orig` extension. 
-
-The installation has been tested on Mac (10.9) but should work on Linux.
-
-If you only want to install vim:
-
-- Open install.sh
-- Remove the files you do not want from `confFiles` and `dests`
-- Run
-
-    $ ./install.sh
-
-Please note that `vim/install.sh` should always be run form the root folder 
-(not form the `vim` folder).
-
-    $ cd ~/.dotfiles
-    $ ./vim/install.sh
-
-## To do
-
-Create an uninstallation script (For fun).
+The installation has been tested on Mac (10.14).
