@@ -53,6 +53,7 @@ Plug 'vim-scripts/scratch.vim'
 Plug 'mrtazz/simplenote.vim'
 Plug 'takac/vim-hardtime'
 Plug 'rizzatti/dash.vim'
+Plug 'will133/vim-dirdiff'
 
 call plug#end() " Required!
 
