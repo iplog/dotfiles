@@ -26,7 +26,7 @@ Plug 'godlygeek/tabular'
 
 " Code completion and check
 Plug 'dense-analysis/ale'
-Plug 'neoclide/coc.nvim', {'branch': 'release'} " LSP client
+" Plug 'neoclide/coc.nvim', {'branch': 'release'} " LSP client
 
 " UI
 Plug 'vim-airline/vim-airline'
@@ -45,7 +45,7 @@ Plug 'vim-erlang/vim-erlang-omnicomplete'
 Plug 'vim-erlang/vim-erlang-skeletons'
 " Plug 'elixir-editors/vim-elixir'
 Plug 'mhinz/vim-mix-format'
-Plug 'ambv/black'
+" Plug 'ambv/black'
 " Plug 'hashivim/vim-terraform'
 
 " Misc
@@ -54,8 +54,12 @@ Plug 'mrtazz/simplenote.vim'
 Plug 'takac/vim-hardtime'
 Plug 'rizzatti/dash.vim'
 Plug 'will133/vim-dirdiff'
-
+Plug 'evanleck/vim-svelte', {'branch': 'main'}
 call plug#end() " Required!
+let g:svelte_preprocessor_tags = [
+  \ { 'name': 'ts', 'tag': 'script', 'as': 'typescript' }
+  \ ]
+let g:svelte_preprocessors = ['ts']
 
 " Enable filetypes. required!
 filetype on
@@ -120,17 +124,18 @@ set fileencoding=utf-8
 " Better line wrapping
 set wrap
 set textwidth=79
-set formatoptions=qrn1
+set formatoptions=qrn1j
 
 " Better Side column
 " Always show the signcolumn, otherwise it would shift the text each time
 " diagnostics appear/become resolved.
-if has("patch-8.1.1564")
-  " Recently vim can merge signcolumn and number column into one
-  set signcolumn=number
-else
-  set signcolumn=yes
-endif
+" if has("patch-8.1.1564")
+"   " Recently vim can merge signcolumn and number column into one
+"   set signcolumn=number
+" else
+"   set signcolumn=yes
+" endif
+set signcolumn=yes
 
 " Enable code folding
 set foldenable
@@ -148,7 +153,7 @@ set confirm             " get a dialog when :q, :w, or :wq fails
 "set viminfo=%100,'100,/100,h,\"500,:100,n~/.vim/viminfo
 set viminfo='20,\"500   " remember copy registers after quitting in the .viminfo file -- 20 jump links, regs up to 500 lines'
 set hidden              " remember undo after quitting
-set history=100         " keep 100 lines of command history
+set history=1000        " keep 1000 lines of command history
 set mouse=a             " use mouse in all modes
 set mousehide           "Hide mouse when typing
 " set splitright          " the new window is created on the right
@@ -185,9 +190,6 @@ endif
 " File type specifics
 " All Trim trailing whitespace when saving a document
 autocmd BufWritePre *\(.md\|.diff\)\@<! :%s/\s\+$//e
-" Python
-autocmd BufWritePost *.py execute ':Black'
-let g:black_linelength = 88
 
 " Markdown
 augroup markdownSpell
@@ -201,10 +203,6 @@ let g:markdown_folding = 1
 " Custom commands
 " System
 nmap <leader>ev :tabedit $MYVIMRC<cr>
-" COC
-if filereadable(expand($HOME . "/.vim/cfg/coc.vim"))
-  source $HOME/.vim/cfg/coc.vim
-endif
 
 " ctags
 if executable('ctags') && !exists(':MakeTags')
@@ -222,19 +220,57 @@ nmap <Leader>T :History<CR>
 let g:ale_echo_msg_error_str = 'E'
 let g:ale_echo_msg_warning_str = 'W'
 let g:ale_echo_msg_format = "[%linter%] %severity% %code% - %s"
+let g:ale_linter_aliases = {'svelte': ['css', 'javascript']}
 let g:ale_linters = {
+    \ 'javascript': ['eslint'],
     \ 'typescript': ['eslint', 'tsserver'],
+    \ 'svelte': ['stylelint', 'eslint', 'tsserver'],
     \ 'typescriptreact': ['eslint', 'tsserver'],
+    \ 'python': ['flake8', 'mypy', 'pylint', 'pyright', 'pylsp'],
+    \ 'css': ['stylelint'],
     \ 'sh': ['shellcheck'],
 \ }
 let g:ale_fixers = {
+    \ 'javascript': ['prettier'],
     \ 'typescript': ['prettier'],
+    \ 'svelte': ['prettier', 'eslint', 'stylelint'],
     \ 'markdown': ['prettier'],
+    \ 'css': ['prettier', 'stylelint'],
+    \ 'python': ['isort', 'black'],
+    \ 'json': ['jq'],
 \ }
   " \ 'sh': ['shfmt'],
 
 let g:ale_fix_on_save = 1
 let g:ale_completion_enabled = 0
+let g:ale_completion_autoimport = 1
+let g:ale_close_preview_on_insert = 1
+" let g:ale_cursor_detail = 1
+set omnifunc=ale#completion#OmniFunc
+
+"" GoTo code navigation.
+nmap <silent> gd :ALEGoToDefinition<CR>
+nmap <silent> gy :ALEGoToTypeDefinition<CR>
+" nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gr :ALEFindReferences<CR>
+
+"" Symbol renaming.
+nmap <leader>rn :ALERename<CR>
+nmap <leader>rf :ALECodeAction<CR>
+
+"" Use K to show documentation in preview window.
+nnoremap <silent> K :call <SID>show_documentation()<CR>
+
+function! s:show_documentation()
+  if (index(['vim','help'], &filetype) >= 0)
+    execute 'h '.expand('<cword>')
+  elseif (g:ale_enabled)
+    call ale#hover#ShowAtCursor()
+  else
+    execute '!' . &keywordprg . " " . expand('<cword>')
+  endif
+endfunction
+
 
 " Airline
 let g:airline_left_sep = ''
@@ -244,10 +280,10 @@ let g:airline#extensions#csv#enabled = 0
 let g:airline_theme = 'base16'
 set noshowmode
 
-" COC
-if filereadable(expand($HOME . "/.vim/cfg/coc.vim"))
-  source $HOME/.vim/cfg/coc.vim
-endif
+" " COC
+" if filereadable(expand($HOME . "/.vim/cfg/coc.vim"))
+"   source $HOME/.vim/cfg/coc.vim
+" endif
 
 " IndentGuides
 let indent_guides_enable_on_vim_startup = 1
