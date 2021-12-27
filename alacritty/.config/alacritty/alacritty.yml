@@ -53,3 +53,4 @@ live_config_reload: true
 
 key_bindings:
   - { key: Return,          mods: Command,    action: ToggleSimpleFullscreen }
+  - { key: Grave,    mods: Command, command: { program: "/usr/local/bin/tmux", args: ["next"] } }
