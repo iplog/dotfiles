@@ -294,12 +294,24 @@ install_asdf() {
   # shellcheck disable=SC1090,SC1091
   . "$(brew --prefix asdf)/asdf.sh"
 
-  asdf plugin-add erlang
-  asdf plugin-add elixir
-  asdf plugin-add nodejs
-  asdf plugin-add golang
-  asdf plugin-add python
-  asdf plugin-add ruby
+  if ! asdf plugin list | grep -q erlang; then
+    asdf plugin-add erlang
+  fi
+  if ! asdf plugin list | grep -q elixir; then
+    asdf plugin-add elixir
+  fi
+  if ! asdf plugin list | grep -q nodejs; then
+    asdf plugin-add nodejs
+  fi
+  if ! asdf plugin list | grep -q golang; then
+    asdf plugin-add golang
+  fi
+  if ! asdf plugin list | grep -q python; then
+    asdf plugin-add python
+  fi
+  if ! asdf plugin list | grep -q ruby; then
+    asdf plugin-add ruby
+  fi
 
   # Install the nodejs OpenPGP keys to main key ring
   bash ~/.asdf/plugins/nodejs/bin/import-release-team-keyring
