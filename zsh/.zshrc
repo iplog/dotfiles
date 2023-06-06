@@ -11,6 +11,13 @@ ZSH_THEME="perso"
 alias zshconfig="vim ~/.zshrc"
 alias ohmyzsh="vim ~/.oh-my-zsh"
 
+# Path modifications (has to be before the plugins because of the ASDF plugin)
+# node
+export PATH=~/node_modules/.bin:$PATH
+
+# personal scripts
+export PATH=~/local/bin:$PATH
+
 # Set to this to use case-sensitive completion
 # CASE_SENSITIVE="true"
 
@@ -40,20 +47,9 @@ alias ohmyzsh="vim ~/.oh-my-zsh"
 # Which plugins would you like to load? (plugins can be found in ~/.oh-my-zsh/plugins/*)
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
-plugins=(git bower brew heroku colorize node npm themes osx vi-mode tmux docker)
+plugins=(git brew heroku colorize node npm themes macos vi-mode tmux docker asdf)
 
 source $ZSH/oh-my-zsh.sh
-
-# Customize to your needs...
-# brew
-export PATH=/usr/local/bin:$PATH
-export PATH=/usr/local/sbin:$PATH
-
-# node
-export PATH=~/node_modules/.bin:$PATH
-
-# personal scripts
-export PATH=~/local/bin:$PATH
 
 ## Vi mode tweaks
 export EDITOR=$(which vim)

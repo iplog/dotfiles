@@ -40,7 +40,7 @@ install_brew() {
 
   prompt_confirm
 
-  sh -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
   brew update
 }
 
@@ -95,6 +95,10 @@ install_zsh() {
   # install oh-my-zsh
   if [ ! -r "$TARGET_PATH/.oh-my-zsh" ]; then
     sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+    if [ -f "$TARGET_PATH/.zshrc" ]; then
+      mv "$TARGET_PATH/.zshrc" "${TARGET_PATH}/.zshrc.bck"
+    fi
   fi
 
   # Create custom env folder for zsh
@@ -121,7 +125,7 @@ install_zsh() {
   echo "Make ZSH the main shell?"
   prompt_confirm
 
-  chsh -s /usr/local/bin/zsh
+  chsh -s /opt/homebrew/bin/zsh
 }
 
 install_ssh() {
@@ -135,6 +139,7 @@ install_local_bin() {
   echo "Installing local bin..."
   prompt_confirm
 
+  mkdir $TARGET_PATH/local
   install_symlinks local-bin
 }
 
@@ -312,9 +317,6 @@ install_asdf() {
   if ! asdf plugin list | grep -q ruby; then
     asdf plugin-add ruby
   fi
-
-  # Install the nodejs OpenPGP keys to main key ring
-  bash ~/.asdf/plugins/nodejs/bin/import-release-team-keyring
 
   while true; do
     read -rp "Erlang version to install: " erlangVersion

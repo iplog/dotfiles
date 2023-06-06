@@ -229,15 +229,20 @@ let g:ale_linters = {
     \ 'python': ['flake8', 'mypy', 'pylint', 'pyright', 'pylsp'],
     \ 'css': ['stylelint'],
     \ 'sh': ['shellcheck'],
+    \ 'json': ['jq'],
+    \ 'elixir': ['elixir-ls'],
 \ }
 let g:ale_fixers = {
-    \ 'javascript': ['prettier'],
-    \ 'typescript': ['prettier'],
+    \ 'javascript': ['prettier', 'eslint'],
+    \ 'javascriptreact': ['prettier', 'eslint'],
+    \ 'typescript': ['prettier', 'eslint'],
+    \ 'typescriptreact': ['prettier', 'eslint'],
     \ 'svelte': ['prettier', 'eslint', 'stylelint'],
     \ 'markdown': ['prettier'],
+    \ 'html': ['prettier'],
     \ 'css': ['prettier', 'stylelint'],
     \ 'python': ['isort', 'black'],
-    \ 'json': ['jq'],
+    \ 'json': ['jq', 'prettier'],
 \ }
   " \ 'sh': ['shfmt'],
 
@@ -251,7 +256,7 @@ set omnifunc=ale#completion#OmniFunc
 "" GoTo code navigation.
 nmap <silent> gd :ALEGoToDefinition<CR>
 nmap <silent> gy :ALEGoToTypeDefinition<CR>
-" nmap <silent> gi <Plug>(coc-implementation)
+nmap <silent> gi :ALEGoToImplementation<CR>
 nmap <silent> gr :ALEFindReferences<CR>
 
 "" Symbol renaming.

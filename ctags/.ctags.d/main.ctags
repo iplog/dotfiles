@@ -6,7 +6,7 @@
 
 --regex-make=/^([^# \t]*):/\1/t,target/
 
---exclude=.mypy_cache
 --exclude=dump
+--exclude=.mypy_cache
 --exclude=dump_json
 --exclude=tmp

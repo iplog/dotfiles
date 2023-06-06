@@ -9,9 +9,9 @@ function box_name {
 # Directory info.
 local current_dir='${PWD/#$HOME/~}'
 
-if [ -f /usr/local/etc/bash_completion.d/git-prompt.sh ]; then
+if [ -f "$(brew --prefix)/etc/bash_completion.d/git-prompt.sh" ]; then
   # source the git-prompt script. (installed by brew with git)
-  source "/usr/local/etc/bash_completion.d/git-prompt.sh"
+  source "$(brew --prefix)/etc/bash_completion.d/git-prompt.sh"
 elif [ -f ~/.git-prompt.sh ]; then
   source "~/.git-prompt.sh"
 fi

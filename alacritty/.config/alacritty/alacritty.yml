@@ -2,7 +2,7 @@ window:
   dimensions:
     columns: 80
     lines: 25
-  startup_mode: SimpleFullscreen
+  startup_mode: Fullscreen
 
 font:
   normal:
@@ -52,5 +52,6 @@ colors:
 live_config_reload: true
 
 key_bindings:
-  - { key: Return,          mods: Command,    action: ToggleSimpleFullscreen }
+  - { key: Return,          mods: Command,    action: ToggleFullscreen }
+  - { key: Return,          mods: Command|Shift,    action: ToggleSimpleFullscreen }
   - { key: Grave,    mods: Command, command: { program: "/usr/local/bin/tmux", args: ["next"] } }
