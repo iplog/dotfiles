@@ -26,6 +26,7 @@ ctags/.ctags.d/main.ctags
 # Deps folders
 ###
 ctags/deps/
+alacritty/.config/alacritty/catppuccin
 
 ###
 # Misc

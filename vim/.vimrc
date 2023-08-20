@@ -6,12 +6,10 @@ endif
 
 call plug#begin('~/.vim/plugged') " Required!
 " Navigation and utils
-" Plug 'qpkorr/vim-bufkill'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-Plug 'majutsushi/tagbar'
 Plug 'tpope/vim-vinegar'
-Plug 'sjl/vitality.vim'
+Plug 'tmux-plugins/vim-tmux-focus-events'
 Plug 'tpope/vim-projectionist'
 
 " Edition
@@ -26,27 +24,25 @@ Plug 'godlygeek/tabular'
 
 " Code completion and check
 Plug 'dense-analysis/ale'
-" Plug 'neoclide/coc.nvim', {'branch': 'release'} " LSP client
+Plug 'prabirshrestha/vim-lsp'
+Plug 'mattn/vim-lsp-settings'
+Plug 'rhysd/vim-lsp-ale'
 
 " UI
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 Plug 'iplog/vim-popsicles'
-Plug 'nathanaelkane/vim-indent-guides'
+Plug 'preservim/vim-indent-guides'
 
 " Syntax
 Plug 'sheerun/vim-polyglot'
-" Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
+Plug 'fatih/vim-go', { 'do': ':GoUpdateBinaries' }
 Plug 'ap/vim-css-color'
-Plug 'elzr/vim-json'
-Plug 'vim-erlang/vim-erlang-compiler'
-" Plug 'vim-erlang/vim-erlang-runtime'
-Plug 'vim-erlang/vim-erlang-omnicomplete'
-Plug 'vim-erlang/vim-erlang-skeletons'
-" Plug 'elixir-editors/vim-elixir'
-Plug 'mhinz/vim-mix-format'
-" Plug 'ambv/black'
-" Plug 'hashivim/vim-terraform'
+Plug 'evanleck/vim-svelte', {'branch': 'main'}
+
+" Test Integrations
+Plug 'vim-test/vim-test'
+Plug 'preservim/vimux'
 
 " Misc
 Plug 'vim-scripts/scratch.vim'
@@ -54,18 +50,12 @@ Plug 'mrtazz/simplenote.vim'
 Plug 'takac/vim-hardtime'
 Plug 'rizzatti/dash.vim'
 Plug 'will133/vim-dirdiff'
-Plug 'evanleck/vim-svelte', {'branch': 'main'}
 call plug#end() " Required!
-let g:svelte_preprocessor_tags = [
-  \ { 'name': 'ts', 'tag': 'script', 'as': 'typescript' }
-  \ ]
-let g:svelte_preprocessors = ['ts']
 
 " Enable filetypes. required!
 filetype on
 filetype plugin on
 filetype indent on
-syntax on
 
 " Color settings (if terminal/gui supports it)
 if $TERM =~ '256color' || $TERM =~ '^xterm$'
@@ -95,9 +85,6 @@ set matchtime=2         " show matching bracket for 0.2 seconds
 set showmatch           " show matching bracket (briefly jump)
 set matchpairs+=<:>     " specially for html
 set cursorline          " Higlight the current line
-
-" Color Scheme
-colorscheme popsicles
 
 " Editor settings
 set colorcolumn=80      " Colum lenght
@@ -129,16 +116,10 @@ set formatoptions=qrn1j
 " Better Side column
 " Always show the signcolumn, otherwise it would shift the text each time
 " diagnostics appear/become resolved.
-" if has("patch-8.1.1564")
-"   " Recently vim can merge signcolumn and number column into one
-"   set signcolumn=number
-" else
-"   set signcolumn=yes
-" endif
 set signcolumn=yes
 
-" Enable code folding
-set foldenable
+" Disable automatic code folding
+set nofoldenable
 
 " Search options
 set ignorecase
@@ -183,7 +164,8 @@ set undofile " enable undo
 " Auto file reloading
 set autoread
 if !has('gui_running')
-  " working thanks to vitality plugin and `set -g focus-events on` in tmux conf
+  " working thanks to 'tmux-plugins/vim-tmux-focus-events' and the
+  " `set -g focus-events on` command in the tmux conf.
   autocmd FocusGained,BufEnter * :silent! checktime
 endif
 
@@ -191,16 +173,12 @@ endif
 " All Trim trailing whitespace when saving a document
 autocmd BufWritePre *\(.md\|.diff\)\@<! :%s/\s\+$//e
 
-" Markdown
-augroup markdownSpell
-  autocmd!
-  autocmd FileType markdown setlocal spell
-  autocmd BufRead,BufNewFile *.md setlocal spell
-augroup END
+" Color Scheme
+set termguicolors
+colorscheme catppuccin-mocha-popsicles
 
-let g:markdown_folding = 1
 
-" Custom commands
+" Custom commands and Plugins configuration
 " System
 nmap <leader>ev :tabedit $MYVIMRC<cr>
 
@@ -215,22 +193,84 @@ nmap <leader>t :Files<CR>
 nmap <Leader>o :Buffers<CR>
 nmap <Leader>T :History<CR>
 
+nnoremap <Leader>O :new<CR>:0r! ls<CR>:norm gggf<CR>:bd!#<CR>
+
 " Plugins configuration and shortcuts
+" let g:lsp_log_verbose = 1
+" let g:lsp_log_file = expand('~/vim-lsp.log')
+let g:lsp_use_native_client = 1
+let g:lsp_document_code_action_signs_enabled = 0
+let g:lsp_preview_float = 1
+let g:lsp_experimental_workspace_folders = 1
+
+let g:lsp_settings = {
+\   'pylsp-all': {
+\     'workspace_config': {
+\       'pylsp': {
+\         'plugins': {
+\           'pycodestyle': {
+\             'enabled': 0
+\           },
+\           'pyflakes': {
+\             'enabled': 0
+\           },
+\           'yapf': {
+\             'enabled': 0
+\           }
+\         }
+\       }
+\     }
+\   },
+\}
+
+
+function! s:on_lsp_buffer_enabled() abort
+  setlocal omnifunc=lsp#complete
+  if exists('+tagfunc') | setlocal tagfunc=lsp#tagfunc | endif
+
+  " set foldmethod=expr
+  "   \ foldexpr=lsp#ui#vim#folding#foldexpr()
+  "   \ foldtext=lsp#ui#vim#folding#foldtext()
+
+  nmap <buffer> gd <plug>(lsp-definition)
+  nmap <buffer> <leader>r <plug>(lsp-document-symbol)
+  nmap <buffer> gs <plug>(lsp-document-symbol-search)
+  nmap <buffer> gS <plug>(lsp-workspace-symbol-search)
+  nmap <buffer> gr <plug>(lsp-references)
+  nmap <buffer> gi <plug>(lsp-implementation)
+  nmap <buffer> gy <plug>(lsp-type-definition)
+  nmap <buffer> <leader>rn <plug>(lsp-rename)
+  nmap <buffer> <leader>rf <plug>(lsp-code-action)
+  nmap <buffer> [g <plug>(lsp-previous-diagnostic)
+  nmap <buffer> ]g <plug>(lsp-next-diagnostic)
+  nmap <buffer> K <plug>(lsp-hover-preview)
+endfunction
+
+augroup lsp_install
+    au!
+    " call s:on_lsp_buffer_enabled only for languages that has the server registered.
+    autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
+augroup END
+
+
 " Ale
+let ale_virtualtext_cursor = 1
 let g:ale_echo_msg_error_str = 'E'
 let g:ale_echo_msg_warning_str = 'W'
 let g:ale_echo_msg_format = "[%linter%] %severity% %code% - %s"
 let g:ale_linter_aliases = {'svelte': ['css', 'javascript']}
 let g:ale_linters = {
     \ 'javascript': ['eslint'],
-    \ 'typescript': ['eslint', 'tsserver'],
-    \ 'svelte': ['stylelint', 'eslint', 'tsserver'],
-    \ 'typescriptreact': ['eslint', 'tsserver'],
-    \ 'python': ['flake8', 'mypy', 'pylint', 'pyright', 'pylsp'],
+    \ 'typescript': ['eslint'],
+    \ 'svelte': ['stylelint', 'eslint'],
+    \ 'typescriptreact': ['eslint'],
+    \ 'python': ['flake8', 'mypy', 'pylint', 'pyright'],
     \ 'css': ['stylelint'],
+    \ 'go': [],
     \ 'sh': ['shellcheck'],
     \ 'json': ['jq'],
     \ 'elixir': ['elixir-ls'],
+    \ 'graphql': [],
 \ }
 let g:ale_fixers = {
     \ 'javascript': ['prettier', 'eslint'],
@@ -243,6 +283,8 @@ let g:ale_fixers = {
     \ 'css': ['prettier', 'stylelint'],
     \ 'python': ['isort', 'black'],
     \ 'json': ['jq', 'prettier'],
+    \ 'elixir': ['mix_format'],
+    \ 'graphql': ['prettier'],
 \ }
   " \ 'sh': ['shfmt'],
 
@@ -251,31 +293,8 @@ let g:ale_completion_enabled = 0
 let g:ale_completion_autoimport = 1
 let g:ale_close_preview_on_insert = 1
 " let g:ale_cursor_detail = 1
-set omnifunc=ale#completion#OmniFunc
 
-"" GoTo code navigation.
-nmap <silent> gd :ALEGoToDefinition<CR>
-nmap <silent> gy :ALEGoToTypeDefinition<CR>
-nmap <silent> gi :ALEGoToImplementation<CR>
-nmap <silent> gr :ALEFindReferences<CR>
-
-"" Symbol renaming.
-nmap <leader>rn :ALERename<CR>
-nmap <leader>rf :ALECodeAction<CR>
-
-"" Use K to show documentation in preview window.
-nnoremap <silent> K :call <SID>show_documentation()<CR>
-
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  elseif (g:ale_enabled)
-    call ale#hover#ShowAtCursor()
-  else
-    execute '!' . &keywordprg . " " . expand('<cword>')
-  endif
-endfunction
-
+" nmap <Leader>ge <plug>(ale_detail)
 
 " Airline
 let g:airline_left_sep = ''
@@ -285,25 +304,24 @@ let g:airline#extensions#csv#enabled = 0
 let g:airline_theme = 'base16'
 set noshowmode
 
-" " COC
-" if filereadable(expand($HOME . "/.vim/cfg/coc.vim"))
-"   source $HOME/.vim/cfg/coc.vim
-" endif
-
 " IndentGuides
 let indent_guides_enable_on_vim_startup = 1
 if !has("gui_running")
   let g:indent_guides_auto_colors = 0
-  autocmd VimEnter,Colorscheme * :hi IndentGuidesEven ctermbg=233
+  autocmd VimEnter,Colorscheme * :hi IndentGuidesEven guibg=#181825
 endif
 
 " Go
 " format with goimports instead of gofmt
 let g:go_fmt_command = "goimports"
 
-" Mix Format
-let g:mix_format_on_save = 1
-let g:mix_format_options = '--check-equivalent'
+" Markdown
+augroup markdownSpell
+  autocmd!
+  autocmd FileType markdown setlocal spell
+  autocmd BufRead,BufNewFile *.md setlocal spell
+augroup END
+let g:markdown_folding = 1
 
 " NERDCommenter
 let NERDSpaceDelims = 1
@@ -328,74 +346,6 @@ if executable('rg')
   nnoremap <Leader>F :Rg '\b<C-R><C-W>\b'
 endif
 
-" Tagbar
-nmap <Leader>r :TagbarToggle<CR>
-let g:tagbar_autofocus = 1
-let g:tagbar_autoclose = 1
-
-let g:tagbar_type_elixir = {
-    \ 'ctagstype' : 'elixir',
-    \ 'kinds' : [
-        \ 'p:protocols',
-        \ 'm:modules',
-        \ 'e:exceptions',
-        \ 'y:types',
-        \ 'd:delegates',
-        \ 'f:functions',
-        \ 'c:callbacks',
-        \ 'a:macros',
-        \ 't:tests',
-        \ 'i:implementations',
-        \ 'o:operators',
-        \ 'r:records'
-    \ ],
-    \ 'sro' : '.',
-    \ 'kind2scope' : {
-        \ 'p' : 'protocol',
-        \ 'm' : 'module'
-    \ },
-    \ 'scope2kind' : {
-        \ 'protocol' : 'p',
-        \ 'module' : 'm'
-    \ },
-    \ 'sort' : 0
-\ }
-
-let g:tagbar_type_go = {
-  \ 'ctagstype' : 'go',
-  \ 'kinds'     : [
-    \ 'p:package',
-    \ 'i:imports:1',
-    \ 'c:constants',
-    \ 'v:variables',
-    \ 't:types',
-    \ 'n:interfaces',
-    \ 'w:fields',
-    \ 'e:embedded',
-    \ 'm:methods',
-    \ 'r:constructor',
-    \ 'f:functions'
-  \ ],
-  \ 'sro' : '.',
-  \ 'kind2scope' : {
-    \ 't' : 'ctype',
-    \ 'n' : 'ntype'
-  \ },
-  \ 'scope2kind' : {
-    \ 'ctype' : 't',
-    \ 'ntype' : 'n'
-  \ },
-  \ 'ctagsbin'  : 'gotags',
-  \ 'ctagsargs' : '-sort -silent'
-\ }
-
-let g:tagbar_type_make = {
-    \ 'kinds':[
-        \ 'm:macros',
-        \ 't:targets'
-    \ ]
-\ }
-
 " Scratch
 nmap <Leader>d :Sscratch<CR>:q<CR>:b __Scratch__<CR>
 nmap <Leader>D :b __Scratch__<CR>:b#<CR>
@@ -407,12 +357,34 @@ endif
 let g:SimplenoteNoteFiletype = 'markdown'
 let g:SimplenoteVertical = 1
 
+" Svelte
+let g:svelte_preprocessor_tags = [
+  \ { 'name': 'ts', 'tag': 'script', 'as': 'typescript' }
+  \ ]
+let g:svelte_preprocessors = ['ts']
+
 " HardTime - No arrows
 let g:hardtime_default_on = 1
 let g:hardtime_maxcount = 2
 let g:hardtime_allow_different_key = 1
 let g:list_of_normal_keys = ["h", "j", "k", "l", "+", "<UP>", "<DOWN>", "<LEFT>", "<RIGHT>"]
 " let g:hardtime_ignore_quickfix = 1
+
+" Vim Test
+" make test commands execute using dispatch.vim
+let test#strategy = "vimux"
+nmap <leader>rtn :TestNearest<Space>
+nmap <leader>rtc :TestClass<Space>
+nmap <leader>rtf :TestFile<Space>
+nmap <leader>rta :TestSuite<Space>
+nmap <leader>rtl :TestLast<Space>
+nmap <silent> <leader>rtg :TestVisit<Space>
+nmap <silent> <leader>rTn :TestNearest<CR>
+nmap <silent> <leader>rTc :TestClass<CR>
+nmap <silent> <leader>rTf :TestFile<CR>
+nmap <silent> <leader>rTa :TestSuite<CR>
+nmap <silent> <leader>rTl :TestLast<CR>
+let test#python#runner = 'pytest'
 
 " Source the vimrc file after saving it. This way, you don't have to reload Vim to see the changes.
 if has("autocmd")

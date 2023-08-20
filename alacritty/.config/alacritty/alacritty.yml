@@ -1,8 +1,19 @@
+env:
+  TERM: xterm-256color
+
+import:
+  # uncomment the flavour you want below:
+  - ~/.config/alacritty/catppuccin/catppuccin-mocha.yml
+  # - ~/.config/alacritty/catppuccin/catppuccin-macchiato.yml
+  # - ~/.config/alacritty/catppuccin/catppuccin-frappe.yml
+  # - ~/.config/alacritty/catppuccin/catppuccin-latte.yml
+
 window:
   dimensions:
     columns: 80
     lines: 25
-  startup_mode: Fullscreen
+  startup_mode: Maximized
+  option_as_alt: OnlyRight
 
 font:
   normal:
@@ -21,33 +32,11 @@ font:
     x: 0
     y: 1
 
+  builtin_box_drawing: true
+
 colors:
-  # Default colors
-  primary:
-    background: '#000000'
-    foreground: '#d0d0d0'
-
-  # Normal colors
-  normal:
-    black:   '#000000' # 0
-    red:     '#ff5f5f' # 203
-    green:   '#5ff967' # 83
-    yellow:  '#fefb67' # 227
-    blue:    '#01a0e4' # 38
-    magenta: '#e474e4' # 176
-    cyan:    '#95bfe6' # 110
-    white:   '#d0d0d0' # 188
-
-  # Bright colors
-  bright:
-    black:   '#505050' # 59
-    red:     '#ff4242' # 203
-    green:   '#4fdd56' # 77
-    yellow:  '#fded02' # 11
-    blue:    '#0080fb' # 33
-    magenta: '#ff6efd' # 207
-    cyan:    '#96cbfe' # 117
-    white:   '#f5f5f5' # 15
+    cursor:
+        cursor: "#B4BEFE" # lavender
 
 live_config_reload: true
 

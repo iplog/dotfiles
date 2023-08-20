@@ -387,6 +387,11 @@ install_alacritty() {
     brew install alacritty
   fi
 
+  # Install Catpuccin theme
+  if [ ! -d alacritty/.config/alacritty/catppuccin ]; then
+    git clone https://github.com/catppuccin/alacritty.git alacritty/.config/alacritty/catppuccin
+  fi
+
   install_symlinks alacritty
 }
 
