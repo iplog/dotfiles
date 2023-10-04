@@ -50,6 +50,7 @@ Plug 'mrtazz/simplenote.vim'
 Plug 'takac/vim-hardtime'
 Plug 'rizzatti/dash.vim'
 Plug 'will133/vim-dirdiff'
+Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 call plug#end() " Required!
 
 " Enable filetypes. required!
@@ -189,11 +190,106 @@ if executable('ctags') && !exists(':MakeTags')
 endif
 
 " FZF
+let $FZF_DEFAULT_OPTS = '--bind alt-q:select-all+accept,ctrl-u:preview-page-up,ctrl-d:preview-page-down'
+let g:fzf_preview_window = ['', 'ctrl-h']
+
+" Customize fzf colors to match your color scheme
+" - fzf#wrap translates this to a set of `--color` options
+let g:fzf_colors =
+\ { 'fg':      ['fg', 'Normal'],
+  \ 'bg':      ['bg', 'Normal'],
+  \ 'hl':      ['fg', 'Special'],
+  \ 'fg+':     ['fg', 'CursorLine', 'CursorColumn', 'Normal'],
+  \ 'bg+':     ['bg', 'CursorLine', 'CursorColumn'],
+  \ 'hl+':     ['fg', 'Statement'],
+  \ 'info':    ['fg', 'PreProc'],
+  \ 'border':  ['fg', 'Ignore'],
+  \ 'prompt':  ['fg', 'Conditional'],
+  \ 'pointer': ['fg', 'Exception'],
+  \ 'marker':  ['fg', 'Keyword'],
+  \ 'spinner': ['fg', 'Label'],
+  \ 'header':  ['fg', 'Special']
+\ }
+
 nmap <leader>t :Files<CR>
 nmap <Leader>o :Buffers<CR>
 nmap <Leader>T :History<CR>
 
 nnoremap <Leader>O :new<CR>:0r! ls<CR>:norm gggf<CR>:bd!#<CR>
+
+" Ripgrep advanced
+if executable('rg')
+  " Use `rg` as the vim grep program
+  set grepprg=rg\ -H\ --no-heading\ --vimgrep\ --smart-case\ --hidden\ --glob\ '!.git'
+  command! -nargs=+ -complete=file -bar Rgrep silent! grep! <args>|cwindow|redraw!
+
+  function! s:fill_quickfix(list, ...)
+    if len(a:list) > 1
+      call setqflist(a:list)
+      copen
+      wincmd p
+      if a:0
+        execute a:1
+      endif
+    endif
+  endfunction
+
+  function! s:rg_to_qf(line)
+    let parts = matchlist(a:line, '\(.\{-}\)\s*:\s*\(\d\+\)\%(\s*:\s*\(\d\+\)\)\?\%(\s*:\(.*\)\)\?')
+    let dict = {'filename': &acd ? fnamemodify(parts[1], ':p') : parts[1], 'lnum': parts[2], 'text': parts[4]}
+    if len(parts[3])
+      let dict.col = parts[3]
+    endif
+    return dict
+  endfunction
+
+  function! s:rg_handler(lines)
+    let list = map(filter(a:lines, 'len(v:val)'), 's:rg_to_qf(v:val)')
+    if empty(list)
+      return
+    endif
+
+    " Tries to simpply open the file if only 1 selected
+    if len(list) == 1
+      let first = list[0]
+      try
+        execute "e" first.filename
+        execute first.lnum
+        if has_key(first, 'col')
+          call cursor(0, first.col)
+        endif
+        normal! zvzz
+        catch
+        endtry
+        return
+    endif
+
+    call s:fill_quickfix(list)
+    execute "copen"
+  endfunction
+
+  command! -bang -nargs=+ -complete=file Rg call
+  \ fzf#run(
+  \   fzf#wrap(
+  \     fzf#vim#with_preview({
+  \      'source': "rg -H --vimgrep --no-heading --color=always --smart-case --hidden --glob '!.git' ".<q-args>,
+  \      'sink*': function('<sid>rg_handler'),
+  \      'options': [
+  \        '--multi', '--ansi', '--delimiter', ':', '--preview-window', '+{2}-/2',
+  \        '--bind', 'enter:accept,alt-a:select-all,alt-d:deselect-all,ctrl-g:select-all+accept'
+  \      ]
+  \    })
+  \   )
+  \ )
+
+  " Extends errorformat to match the format created by the `fill_quickfix` function
+  set errorformat+=%f\|%l\ col\ %c\|%m
+
+  nnoremap <Leader>f :Rg<Space>
+  nnoremap <Leader>g :Rgrep<Space>
+  " grep word under cursor
+  nnoremap <Leader>F :Rg '\b<C-R><C-W>\b'
+endif
 
 " Plugins configuration and shortcuts
 " let g:lsp_log_verbose = 1
@@ -254,11 +350,17 @@ augroup END
 
 
 " Ale
+let g:ale_fix_on_save = 1
 let ale_virtualtext_cursor = 1
+let g:ale_completion_enabled = 0
+let g:ale_close_preview_on_insert = 1
+let g:ale_warn_about_trailing_whitespace = 0
+
 let g:ale_echo_msg_error_str = 'E'
 let g:ale_echo_msg_warning_str = 'W'
 let g:ale_echo_msg_format = "[%linter%] %severity% %code% - %s"
 let g:ale_linter_aliases = {'svelte': ['css', 'javascript']}
+
 let g:ale_linters = {
     \ 'javascript': ['eslint'],
     \ 'typescript': ['eslint'],
@@ -288,13 +390,7 @@ let g:ale_fixers = {
 \ }
   " \ 'sh': ['shfmt'],
 
-let g:ale_fix_on_save = 1
-let g:ale_completion_enabled = 0
-let g:ale_completion_autoimport = 1
-let g:ale_close_preview_on_insert = 1
-" let g:ale_cursor_detail = 1
-
-" nmap <Leader>ge <plug>(ale_detail)
+nmap <Leader>e <plug>(ale_detail)
 
 " Airline
 let g:airline_left_sep = ''
@@ -325,26 +421,6 @@ let g:markdown_folding = 1
 
 " NERDCommenter
 let NERDSpaceDelims = 1
-
-" Ripgrep advanced
-if executable('rg')
-  function! RipgrepFzf(query, fullscreen)
-    let command_fmt = 'rg --column --hidden --line-number --no-heading --color=always --smart-case -- %s || true'
-    let initial_command = printf(command_fmt, shellescape(a:query))
-    let reload_command = printf(command_fmt, '{q}')
-    let spec = {'options': ['--phony', '--query', a:query, '--bind', 'change:reload:'.reload_command]}
-    call fzf#vim#grep(initial_command, 1, spec, a:fullscreen)
-  endfunction
-
-  command! -bang -nargs=* RG call RipgrepFzf(<q-args>, <bang>0)
-
-  set grepprg=rg\ -H\ --no-heading\ --vimgrep\ --smart-case\ --hidden\ --glob\ '!.git'
-  command! -nargs=+ -complete=file -bar Rg silent! grep! <args>|cwindow|redraw!
-
-  nnoremap <Leader>f :Rg<Space>
-  " grep word under cursor
-  nnoremap <Leader>F :Rg '\b<C-R><C-W>\b'
-endif
 
 " Scratch
 nmap <Leader>d :Sscratch<CR>:q<CR>:b __Scratch__<CR>
