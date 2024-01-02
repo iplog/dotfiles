@@ -27,6 +27,7 @@ Plug 'dense-analysis/ale'
 Plug 'prabirshrestha/vim-lsp'
 Plug 'mattn/vim-lsp-settings'
 Plug 'rhysd/vim-lsp-ale'
+Plug 'github/copilot.vim'
 
 " UI
 Plug 'vim-airline/vim-airline'
