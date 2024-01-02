@@ -1,0 +1,57 @@
+import = [
+  # uncomment the Catppuccing flavour you want below:
+  "~/.config/alacritty/catppuccin/catppuccin-mocha.toml",
+  # "~/.config/alacritty/catppuccin/catppuccin-macchiato.toml",
+  # "~/.config/alacritty/catppuccin/catppuccin-frappe.toml",
+  # "~/.config/alacritty/catppuccin/catppuccin-latte.toml",
+]
+
+live_config_reload = true
+
+[colors.cursor]
+cursor = "#B4BEFE"
+
+[env]
+TERM = "xterm-256color"
+
+[font]
+builtin_box_drawing = true
+size = 12.0
+
+[font.bold]
+family = "Monaco"
+
+[font.bold_italic]
+family = "Monaco"
+
+[font.glyph_offset]
+x = 0
+y = 1
+
+[font.italic]
+family = "Monaco"
+
+[font.normal]
+family = "Monaco"
+
+[font.offset]
+x = 0
+y = 2
+
+[[keyboard.bindings]]
+action = "ToggleFullscreen"
+key = "Return"
+mods = "Command"
+
+[[keyboard.bindings]]
+action = "ToggleSimpleFullscreen"
+key = "Return"
+mods = "Command|Shift"
+
+[window]
+option_as_alt = "OnlyRight"
+startup_mode = "Maximized"
+
+[window.dimensions]
+columns = 80
+lines = 25
