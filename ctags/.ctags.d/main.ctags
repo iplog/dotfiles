@@ -8,7 +8,12 @@
 
 --exclude=dump
 --exclude=.mypy_cache
+--exclude=.git
+--exclude=.coverage
 --exclude=dump_json
 --exclude=tmp
 --exclude=build
 --exclude=tmp
+--exclude=__pycache__
+--exclude=dist
+--exclude=htmlcov
