@@ -192,7 +192,8 @@ endif
 
 " FZF
 let $FZF_DEFAULT_OPTS = '--bind alt-q:select-all+accept,ctrl-u:preview-page-up,ctrl-d:preview-page-down'
-let g:fzf_preview_window = ['', 'ctrl-h']
+let g:fzf_vim = {}
+let g:fzf_vim.preview_window = ['', 'ctrl-h']
 
 " Customize fzf colors to match your color scheme
 " - fzf#wrap translates this to a set of `--color` options
