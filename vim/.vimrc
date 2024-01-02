@@ -314,6 +314,12 @@ let g:lsp_settings = {
 \           },
 \           'yapf': {
 \             'enabled': 0
+\           },
+\           'rope_autoimport': {
+\             'enabled': 1,
+\             'completions': {
+\               'enabled': 0
+\             }
 \           }
 \         }
 \       }
@@ -362,13 +368,15 @@ let g:ale_echo_msg_error_str = 'E'
 let g:ale_echo_msg_warning_str = 'W'
 let g:ale_echo_msg_format = "[%linter%] %severity% %code% - %s"
 let g:ale_linter_aliases = {'svelte': ['css', 'javascript']}
+let g:lsp_ale_auto_enable_linter = v:false " Gives priority to ALE linters.
+" `vim-lsp` must be explicitly enabled for each filetype to be used as a linter.
 
 let g:ale_linters = {
     \ 'javascript': ['eslint'],
     \ 'typescript': ['eslint'],
     \ 'svelte': ['stylelint', 'eslint'],
     \ 'typescriptreact': ['eslint'],
-    \ 'python': ['flake8', 'mypy', 'pylint', 'pyright'],
+    \ 'python': ['flake8', 'mypy', 'pylint', 'pyright', 'ruff'],
     \ 'css': ['stylelint'],
     \ 'go': [],
     \ 'sh': ['shellcheck'],
@@ -385,7 +393,7 @@ let g:ale_fixers = {
     \ 'markdown': ['prettier'],
     \ 'html': ['prettier'],
     \ 'css': ['prettier', 'stylelint'],
-    \ 'python': ['isort', 'black'],
+    \ 'python': ['isort', 'black', 'ruff', 'ruff_format'],
     \ 'json': ['jq', 'prettier'],
     \ 'elixir': ['mix_format'],
     \ 'graphql': ['prettier'],
